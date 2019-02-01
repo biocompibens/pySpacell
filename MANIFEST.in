@@ -1,0 +1,7 @@
+include CHANGES.txt
+include LICENSE.txt
+
+## later, insert documentation and data and examples
+recursive-include docs *
+recursive-include pySpacell/data *
+recursive-include pySpacell/example *
