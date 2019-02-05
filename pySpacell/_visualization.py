@@ -257,6 +257,7 @@ class Visualization(object):
                         neighborhood_matrix_type,
                         neighborhood_min_p0,
                         neighborhood_max_p1,
+                        quantiles=[2.5, 97.5],
                         **kwargs):
 
 
@@ -332,7 +333,7 @@ class Visualization(object):
                                             method,
                                             neighborhood_matrix_type, 
                                             permutations,
-                                            quantiles,
+                                            quantiles=[2.5, 97.5],
                                             **kwargs):
         stats = []
         low_q = []

@@ -4,12 +4,12 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README'), encoding='utf-8') as f:
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='pySpacell',
-    version='0.1.11',
+    version='0.1.0',
     description='A Python package for single cell spatial image analysis',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -24,7 +24,7 @@ setup(
     packages=find_packages(exclude=['build', 'docs', 'templates']),
     include_package_data=True,
     install_requires=['matplotlib>=2.2.3', 'numpy', 'seaborn', 
-                      'PySAL', 'pandas','scipy', 
+                      'PySAL>=2.0', 'pandas','scipy', 
                       'Pillow', 'opencv-python',
                      ],
     keywords = 'spatial analysis microscopy cells statistics'

@@ -9,19 +9,29 @@ from scipy.spatial.distance import cdist
 from itertools import *
 from PIL import Image, ImageDraw
 
-from . import _neighborhood_matrix
-from . import _spatial_autocorrelation
-from . import _assortativity
-from . import _visualization
-from . import _ripley
+try:
+    from ._neighborhood_matrix import NeighborhoodMatrixComputation
+    from ._spatial_autocorrelation import SpatialAutocorrelation
+    from ._assortativity import Assortativity
+    from ._visualization import Visualization
+    from ._ripley import Ripley
+    from ._randomizations import Randomizations
+except SystemError:
+    from _neighborhood_matrix import NeighborhoodMatrixComputation
+    from _spatial_autocorrelation import SpatialAutocorrelation
+    from _assortativity import Assortativity
+    from _visualization import Visualization
+    from _ripley import Ripley
+    from _randomizations import Randomizations
 
 
 
-class Spacell(_neighborhood_matrix.NeighborhoodMatrixComputation, 
-              _spatial_autocorrelation.SpatialAutocorrelation,
-              _assortativity.Assortativity,
-              _visualization.Visualization,
-              _ripley.Ripley,
+class Spacell(NeighborhoodMatrixComputation, 
+              SpatialAutocorrelation,
+              Assortativity,
+              Visualization,
+              Ripley,
+              Randomizations,
               object):
 
 
@@ -125,7 +135,7 @@ class Spacell(_neighborhood_matrix.NeighborhoodMatrixComputation,
                               maximum bound for the neighborhood.
                               should be int for 'k' or 'network'. Can be int or float for 'radius'
             :pysal_object: bool 
-                           if True, return a pysal.weights object
+                           if True, return a pysal.lib.weights object
                            if False, return a tuple (W, L) with W full numpy neighborhood matrix and L list of vertices' ids
         '''
 
@@ -413,7 +423,7 @@ class Spacell(_neighborhood_matrix.NeighborhoodMatrixComputation,
                     if f in self.feature_table.columns:
                         self._compute_ripley(f,
                                 neighborhood_p1,
-                                kwargs)
+                                **kwargs)
                     else:
                         print("WARNING feature {} not in feature_table".format(f))
             elif isinstance(feature_columns, str):
@@ -478,10 +488,10 @@ class Spacell(_neighborhood_matrix.NeighborhoodMatrixComputation,
             
         '''
 
-        if self._debug:
-            print("\ncompute_per_object_analysis", feature_columns, method, neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, permutations, quantiles)
+        neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)
 
-        neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations)
+        if self._debug:
+            print("\ncompute_per_object_analysis", feature_columns, method, neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, kwargs)
 
         if method.lower() in self.local_sa_methods:
             if isinstance(feature_columns, list):

@@ -57,7 +57,11 @@ class Ripley(object):
         product = w[0]*edge_corr
 
         ### monte carlo simulations: "fix the combined set of locations and the number of each type of event, then randomly assigns labels to locations." Dixon 2002
-        shuffled_labels = [np.random.permutation(class_object) for _ in range(permutations)]
+        shuffled_labels = self._compute_randomizations(cond,
+                                  feature_column,
+                                  permutations,
+                                  **kwargs)
+        print(shuffled_labels[0].shape, product.shape)
 
         ripley_cross = np.zeros((len(classes), len(classes)))
         ripley_cross_permutations = np.zeros((len(classes), len(classes), permutations))
@@ -71,8 +75,8 @@ class Ripley(object):
                 ripley_cross[i,j] = factor*big_sum
 
                 ripley_cross_perm = np.array([factor*
-                                np.nansum(product[class_shuffled == i,:]
-                                                 [:,class_shuffled == j]) 
+                                np.nansum(product[class_shuffled == classes[i],:]
+                                                 [:,class_shuffled == classes[j]]) 
                                 for class_shuffled in shuffled_labels])
                 ripley_cross_permutations[i,j,:] = ripley_cross_perm
 

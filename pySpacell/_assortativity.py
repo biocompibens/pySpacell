@@ -12,6 +12,7 @@ class Assortativity(object):
                               neighborhood_matrix_type,
                               neighborhood_p0,
                               neighborhood_p1,
+                              *args,
                               iterations = 'None',
                               permutations = 0, 
                               quantiles = [2.5, 97.5],
@@ -54,8 +55,9 @@ class Assortativity(object):
         W_mat[W_mat > 0] = 1
 
         ### get the feature values
-        indices_X, values_X = pd.factorize(self.feature_table.loc[self.feature_table[self._column_objectnumber].isin(w[1]), feature_column], sort=True)
-        self.feature_table.loc[self.feature_table[self._column_objectnumber].isin(w[1]), "class_indices_assortativity_{}".format(feature_column)] = indices_X
+        cond = self.feature_table[self._column_objectnumber].isin(w[1])
+        indices_X, values_X = pd.factorize(self.feature_table.loc[cond, feature_column], sort=True)
+        self.feature_table.loc[cond, "class_indices_assortativity_{}".format(feature_column)] = indices_X
 
         ### compute asortativity
         norm_mat = self._compute_matrix_for_assortativity(indices_X, W_mat)
@@ -64,7 +66,10 @@ class Assortativity(object):
         
         ### compute the randomizations and corresponding assortativity
         if permutations != 0:
-            randomizations = [self._compute_matrix_for_assortativity(np.random.permutation(indices_X), W_mat) for i in range(permutations)]
+            random_categories = self._compute_randomizations(cond,
+                              "class_indices_assortativity_{}".format(feature_column),
+                              permutations, **kwargs)
+            randomizations = [self._compute_matrix_for_assortativity(random_cat, W_mat) for random_cat in random_categories]
             
             sim = [self._newman_assortativity_coef(rand, M) for rand in randomizations]
 

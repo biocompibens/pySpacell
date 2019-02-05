@@ -153,17 +153,17 @@ class SpatialAutocorrelation(object):
 
     def _autocorrelation_method(self, method):
         if method.lower() == 'moran':
-            method_fct = lambda *args, **kwargs: pysal.Moran(*args, **kwargs,two_tailed=True)
+            method_fct = lambda *args, **kwargs: pysal.explore.esda.moran.Moran(*args, **kwargs,two_tailed=True)
             def get_stats(_object):
                 return _object.I
 
         elif method.lower() == 'geary':
-            method_fct = lambda *args, **kwargs: pysal.Geary(*args, **kwargs, two_tailed=True)
+            method_fct = lambda *args, **kwargs: pysal.explore.esda.geary.Geary(*args, **kwargs, two_tailed=True)
             def get_stats(_object):
                 return _object.C
 
         elif method.lower() == 'getisord':
-            method_fct = lambda *args, **kwargs: pysal.esda.getisord.G(*args, **kwargs, two_tailed=True)
+            method_fct = lambda *args, **kwargs: pysal.explore.esda.getisord.G(*args, **kwargs, two_tailed=True)
             def get_stats(_object):
                 return _object.G
 
@@ -205,12 +205,12 @@ class SpatialAutocorrelation(object):
 
     def _local_autocorrelation_method(self, method, star):
         if method.lower() == 'moran':
-            method_fct = lambda *args, **kwargs: pysal.Moran_Local(*args, **kwargs)
+            method_fct = lambda *args, **kwargs: pysal.explore.esda.moran.Moran_Local(*args, **kwargs)
             def get_stats(_object):
                 return _object.Is
 
         elif method.lower() == 'getisord':
-            method_fct = lambda *args, **kwargs: pysal.esda.getisord.G_Local(*args, **kwargs, star=True)
+            method_fct = lambda *args, **kwargs: pysal.explore.esda.getisord.G_Local(*args, **kwargs, star=True)
             def get_stats(_object):
                 return _object.Gs
 

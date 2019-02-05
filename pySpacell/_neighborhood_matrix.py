@@ -76,7 +76,7 @@ class NeighborhoodMatrixComputation(object):
                                                              neighborhood_p1,
                                                              **kwargs)
 
-            neighborhood_matrix = pysal.weights.weights.W(neighbor_dict)
+            neighborhood_matrix = pysal.lib.weights.weights.W(neighbor_dict)
             nb_pairs = np.sum(neighborhood_matrix.full()[0])/2
 
             self.neighborhood_matrix_df.loc[self.neighborhood_matrix_df.shape[0],:] = [neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
