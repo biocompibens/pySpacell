@@ -110,12 +110,12 @@ class NeighborhoodMatrixComputation(object):
             
             NN_for_df = [line[1:] for line in NN]
             if save_neighbors:
-                self.feature_table['neighbors_{}'.format(suffix)] = np.empty((self.n, 0)).tolist()
-                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN_for_df)
+                # self.feature_table['neighbors_{}'.format(suffix)] = np.empty((self.n, 0)).tolist()
+                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN_for_df, index=self.feature_table.index)
         
         else:
             if save_neighbors:
-                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN)
+                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN, index=self.feature_table.index)
         
             ObjNum = self.feature_table[self._column_objectnumber].values
             neighbor_dict = {obj_num: neighbors for (obj_num, neighbors) in zip(ObjNum, NN) if len(neighbors)>0}
@@ -134,7 +134,7 @@ class NeighborhoodMatrixComputation(object):
         if self.NN is None:
             self._compute_NN(kd_tree_approx)
 
-        mask = (self.NN_distances > neighborhood_p1)+(self.NN_distances < neighborhood_p0)
+        mask = (self.NN_distances > neighborhood_p1) + (self.NN_distances < neighborhood_p0)
         mask[:,0] = True
         
         NN = np.array(self.NN)
@@ -147,8 +147,8 @@ class NeighborhoodMatrixComputation(object):
         self.feature_table.loc[:, 'NumberNeighbors_{}'.format(suffix)] = np.sum(~mask, axis=1)
 
         if save_neighbors:
-            self.feature_table['neighbors_{}'.format(suffix)] = np.empty((self.n, 0)).tolist()
-            self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN)
+            # self.feature_table['neighbors_{}'.format(suffix)] = np.empty((self.n, 0)).tolist()
+            self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN, index=self.feature_table.index)
 
         ObjNum = self.feature_table[self._column_objectnumber].values
         neighbor_dict = {obj_num: neighbors for (obj_num, neighbors) in zip(ObjNum, NN) if len(neighbors)>0}
@@ -226,7 +226,7 @@ class NeighborhoodMatrixComputation(object):
             self.feature_table.loc[:, 'NumberNeighbors_{}'.format(suffix)] = np.sum(w, axis=0)
 
             if save_neighbors:
-                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series([obj_nums[list_where[1][list_where[0] == index]] for index in range(self.n)])
+                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series([obj_nums[list_where[1][list_where[0] == index]] for index in range(self.n)], index=self.feature_table.index)
 
         return neighbor_dict
 

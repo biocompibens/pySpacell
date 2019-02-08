@@ -178,7 +178,7 @@ class RipleyObject(object):
         self.count_classes = count_classes
         self.lambda_i = lambda_i
 
-    def get_cross_function(self, class1, class2, star=True, variance_stabilization=True):
+    def get_cross_function(self, class1, class2, star=True, variance_stabilization=True, **kwargs):
         if star:
             K = self.K_cross_star[class1, class2]
         else:
@@ -187,7 +187,7 @@ class RipleyObject(object):
             return np.sqrt(K/np.pi)
         return K
 
-    def get_pval(self, class1, class2, star=True):
+    def get_pval(self, class1, class2, star=True, **kwargs):
         n_permutations = self.permutations.shape[2]
         if star:
             sum_lambda = self.lambda_i + self.lambda_i[:,np.newaxis]
@@ -198,7 +198,7 @@ class RipleyObject(object):
 
         return p_val
 
-    def get_quantiles(self, class1, class2, star=True, quantiles=[2.5, 97.5], variance_stabilization=True):
+    def get_quantiles(self, class1, class2, star=True, quantiles=[2.5, 97.5], variance_stabilization=True, **kwargs):
         n_permutations = self.permutations.shape[2]
         if star:
             sum_lambda = self.lambda_i + self.lambda_i[:,np.newaxis]
@@ -214,7 +214,7 @@ class RipleyObject(object):
         return self.get_cross_function(class11, class12, **kwargs) - self.get_cross_function(class21, class22, **kwargs)
 
 
-    def get_diff_pval(self, class11, class12, class21, class22, star=True):
+    def get_diff_pval(self, class11, class12, class21, class22, star=True, **kwargs):
         n_permutations = self.permutations.shape[2]
         if star:
             sum_lambda = self.lambda_i + self.lambda_i[:,np.newaxis]
@@ -231,7 +231,7 @@ class RipleyObject(object):
         return p_val
 
 
-    def get_diff_quantiles(self, class11, class12, class21, class22, star=True, quantiles=[2.5, 97.5], variance_stabilization=True):
+    def get_diff_quantiles(self, class11, class12, class21, class22, star=True, quantiles=[2.5, 97.5], variance_stabilization=True, **kwargs):
         n_permutations = self.permutations.shape[2]
 
         if star:

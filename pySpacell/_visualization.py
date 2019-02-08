@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import warnings
 import matplotlib.pyplot as plt
 import scipy.ndimage.filters as filters
 from scipy.spatial import Voronoi
@@ -265,9 +266,8 @@ class Visualization(object):
             Checks if the computing has been done.
             Retrieves info from perimage_results_table.
 
-            :feature_columns: list of str
-                              features' names from feature_table.
-                              All features will be tested on the same neighborhood matrices and with the same analysis method
+            :feature_column: str
+                              features' name from feature_table.
                               
             :method: str
                      can be 
@@ -306,21 +306,7 @@ class Visualization(object):
                                            neighborhood_max_p1, 
                                            **kwargs)
 
-        if method =='ripley':
-            print("TODO")
-
-        elif method == 'assortativity':
-            cols = self.perimage_results_table.index.get_level_values('feature').unique()
-            for c in cols:
-                if feature_column in c:
-                    self._plot_correlogram_from_seq_points_x(seq_points_x,
-                                            c,
-                                            method,
-                                            neighborhood_matrix_type, 
-                                            **kwargs)
-
-        else: ##spatial autocorrelation
-            self._plot_correlogram_from_seq_points_x(seq_points_x,
+        self._plot_correlogram_from_seq_points_x(seq_points_x,
                                             feature_column,
                                             method,
                                             neighborhood_matrix_type, 
@@ -332,56 +318,390 @@ class Visualization(object):
                                             feature_column,
                                             method,
                                             neighborhood_matrix_type, 
-                                            permutations,
+                                            permutations=999,
                                             quantiles=[2.5, 97.5],
                                             **kwargs):
-        stats = []
-        low_q = []
-        high_q = []
+        if method == 'ripley':
+            try:
+                Ks = [self.perimage_results_table.loc[(feature_column, neighborhood_matrix_type, 0, n1, 'None', permutations, quantiles[0], quantiles[1]), "ripley_results"].K for n1 in seq_points_x[1:]]
+            except Exception:
+                print("Ripley has not been computed on {} with {}".format(feature_column, seq_points_x))
+                return 
 
-        for index in range(len(seq_points_x)-1):
-            neighborhood_p0 = seq_points_x[index]
-            neighborhood_p1 = seq_points_x[index+1]
+            figK = plt.figure("Ripley_diff_cross_function_{}_{}_matrix-{}-{}-{}-_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], permutations, quantiles[0], quantiles[1]))
+            plt.plot(seq_points_x[1:], Ks, 'o-', label='K')
+            plt.plot(seq_points_x[1:], np.pi*seq_points_x[1:]**2, 'r-', label="pi * t^2")
+            plt.legend()
 
-            neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)
+            types = np.unique(self.feature_table[feature_column])
+            n_types = len(types)
 
-            multiIndex_f = (feature_column, \
-                            neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
-                            permutations, quantiles[0], quantiles[1])
+            if n_types > 3:
+                warnings.warn("WARNING!\nThe number of possible plots for Ripley's cross functions is too large for a number of categories > 3. Please use the dedicated function BLABLABLA")
 
-            if self._debug:
-                print("in _plot_correlogram_from_seq_points_x", multiIndex_f, method)
+            obj_ripley = [self.perimage_results_table.loc[(feature_column, neighborhood_matrix_type, 0, n1, 'None', permutations, quantiles[0], quantiles[1]), "ripley_results"] for n1 in seq_points_x[1:]]
 
-            stats.append(self.perimage_results_table.loc[multiIndex_f, "{}_stats".format(method)])
+            fig_crossK = plt.figure("Ripley_cross_functions_{}_{}_matrix-{}-{}_{}_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], permutations, quantiles[0], quantiles[1]))
 
-            low_q.append(self.perimage_results_table.loc[multiIndex_f, "{}_low_quantile".format(method)])
-            high_q.append(self.perimage_results_table.loc[multiIndex_f, "{}_high_quantile".format(method)])
+            for c, name_c in enumerate(types):
+                cross = [obj.get_cross_function(c, c, **kwargs) for obj in obj_ripley]
+                cross_quantiles = np.array([obj.get_quantiles(c, c, **kwargs) for obj in obj_ripley])
 
-        plt.figure("{}_{}_matrix-{}-{}-{}-iterations-{}_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], iterations, permutations, quantiles[0], quantiles[1]))
+                if n_types == 2:
+                    plt.subplot(2,2,1+c)
+                else:
+                    plt.subplot(2,3,1+c)
 
-        lineplot = plt.plot(seq_points_x[1:], stats, '+-', label='data')
-        plt.plot(seq_points_x[1:], low_q, '--', label='{:.1f} quantile'.format(quantiles[0]), c=lineplot[0].get_color())
-        plt.plot(seq_points_x[1:], high_q, ':', label='{:.1f} quantile'.format(quantiles[1]), c=lineplot[0].get_color())
-        plt.fill_between(seq_points_x[1:], low_q, high_q, where=high_q>=low_q, alpha=0.5, color=lineplot[0].get_color())
-        plt.legend()
-        plt.title(feature_column)
+                lineplot = plt.plot(seq_points_x[1:], cross, 'o-', label='({}, {})'.format(name_c, name_c))
+                plt.plot(seq_points_x[1:], cross_quantiles[:,0],'+--', c=lineplot[0].get_color())
+                plt.plot(seq_points_x[1:], cross_quantiles[:,1], '+--', c=lineplot[0].get_color())
+                plt.fill_between(seq_points_x[1:], y1=cross_quantiles[:,0], y2=cross_quantiles[:,1], alpha=0.2)
+                plt.xlabel(neighborhood_matrix_type)
+                plt.legend()
+
+            fig_diffcrossK = plt.figure("Ripley_diff_cross_functions_{}_{}_matrix-{}-{}-{}_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], permutations, quantiles[0], quantiles[1])) 
+
+            n_current_subplot = 1
+            for c, name_c in enumerate(types):
+                for c2, name_c2 in enumerate(types):
+                    if c2 <= c:
+                        continue
+
+                    diff = [obj.get_diff_cross_function(c, c, c2, c2, **kwargs) for obj in obj_ripley]
+                    diff_quantiles = np.array([obj.get_diff_quantiles(c, c, c2, c2, **kwargs) for obj in obj_ripley])
+
+                    if n_types==2:
+                        plt.subplot(2,2,n_current_subplot)
+                        n_current_subplot += 1
+                    else:
+                        plt.subplot(3,4, n_current_subplot)
+                        n_current_subplot += 1
+
+                    lineplot = plt.plot(seq_points_x[1:], diff, 'o-', label='({}, {}) - ({}, {})'.format(name_c, name_c, name_c2, name_c2))
+                    plt.plot(seq_points_x[1:], diff_quantiles[:,0],'--', c=lineplot[0].get_color())
+                    plt.plot(seq_points_x[1:], diff_quantiles[:,1], '--', c=lineplot[0].get_color())
+                    plt.fill_between(seq_points_x[1:], y1=diff_quantiles[:,0], y2=diff_quantiles[:,1], alpha=0.5)
+                    plt.xlabel(neighborhood_matrix_type)
+                    plt.legend()
+                    
+                for c2, name_c2 in enumerate(types):
+                    for c3, name_c3 in enumerate(types):
+                        if c3 <= c2:
+                            continue
+                        diff = [obj.get_diff_cross_function(c, c2, c, c3, **kwargs) for obj in obj_ripley]
+                        diff_quantiles = np.array([obj.get_diff_quantiles(c, c2, c, c3, **kwargs) for obj in obj_ripley])
+
+                        if n_types==2:
+                            plt.subplot(2,2,n_current_subplot)
+                            n_current_subplot += 1
+                        else:
+                            plt.subplot(3,4,n_current_subplot)
+                            n_current_subplot += 1
+
+                        lineplot = plt.plot(seq_points_x[1:], diff, 'o-', label='({}, {}) - ({}, {})'.format(name_c, name_c2, name_c, name_c3))
+                        plt.plot(seq_points_x[1:], diff_quantiles[:,0],'--', c=lineplot[0].get_color())
+                        plt.plot(seq_points_x[1:], diff_quantiles[:,1], '--', c=lineplot[0].get_color())
+                        plt.fill_between(seq_points_x[1:], y1=diff_quantiles[:,0], y2=diff_quantiles[:,1], alpha=0.5)
+                        plt.xlabel(neighborhood_matrix_type)
+                        plt.legend()
+
+        else:
+            stats = []
+            low_q = []
+            high_q = []
+
+            for index in range(len(seq_points_x)-1):
+                neighborhood_p0 = seq_points_x[index]
+                neighborhood_p1 = seq_points_x[index+1]
+
+                neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)
+
+                multiIndex_f = (feature_column, \
+                                neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
+                                permutations, quantiles[0], quantiles[1])
+
+                if self._debug:
+                    print("in _plot_correlogram_from_seq_points_x", multiIndex_f, method)
+
+                stats.append(self.perimage_results_table.loc[multiIndex_f, "{}_stats".format(method)])
+
+                low_q.append(self.perimage_results_table.loc[multiIndex_f, "{}_low_quantile".format(method)])
+                high_q.append(self.perimage_results_table.loc[multiIndex_f, "{}_high_quantile".format(method)])
+
+            plt.figure("{}_{}_matrix-{}-{}-{}-iterations-{}_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], iterations, permutations, quantiles[0], quantiles[1]))
+
+            lineplot = plt.plot(seq_points_x[1:], stats, '+-', label='data')
+            plt.plot(seq_points_x[1:], low_q, '--', label='{:.1f} quantile'.format(quantiles[0]), c=lineplot[0].get_color())
+            plt.plot(seq_points_x[1:], high_q, ':', label='{:.1f} quantile'.format(quantiles[1]), c=lineplot[0].get_color())
+            plt.fill_between(seq_points_x[1:], low_q, high_q, where=high_q>=low_q, alpha=0.5, color=lineplot[0].get_color())
+            plt.legend()
+            plt.title(feature_column)
+            plt.xlabel(neighborhood_matrix_type)
+            plt.ylabel('{} statistics'.format(method))
+
+
+    def plot_ripley_cross(self, 
+                        feature_column,
+                        neighborhood_min_p0,
+                        neighborhood_max_p1,
+                        class0, class1,
+                        quantiles=[2.5, 97.5],
+                        **kwargs):
+
+
+        ''' Plots one feature at a time. 
+            Checks if the computing has been done.
+            Retrieves info from perimage_results_table.
+
+            :feature_column: str
+                              features' name from feature_table.
+                              
+            :method: str
+                     can be 
+                     - 'assortativity' or 'ripley' (for categorical features), 
+                     - 'moran', 'geary', 'getisord' (global spatial autocorrelation for continuous features)
+
+            :neighborhood_matrix_type: str
+                                        should be 'k', 'radius', or 'network'
+                                        Same 'neighborhood_matrix_type' for all the points in the correlogram.
+
+            :neighborhood_min_p0: int or float
+                                  minimum bound for the neighborhood.
+                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
+            :neighborhood_min_p1: int or float
+                                  maximum bound for the neighborhood.
+                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
+            
+
+            :neighborhood_step: int or float
+                                a step in terms of parameters ([p0, p0+step, p0+2step, ...p1])
+                                should be int for 'k' or 'network'. Can be int or float for 'radius' 
+                                one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.
+
+            :nb_pairs_step: int
+                            a step in terms of number of pairs for each test.
+                            Overlooked if neighborhood_step is provided.
+
+            :nb_test_points: int
+                             a number of test points.
+                             Overlooked if neighborhood_step or nb_pairs_step are provided.
+
+        '''
+        neighborhood_matrix_type = 'radius'
+        seq_points_x = self._check_correlogram_input_arguments(neighborhood_matrix_type, 
+                                           neighborhood_min_p0, 
+                                           neighborhood_max_p1, 
+                                           **kwargs)
+
+        self._plot_ripley_cross_from_seq_points_x(seq_points_x,
+                                            feature_column,
+                                            class0, class1,
+                                            **kwargs)
+
+
+    def _plot_ripley_cross_from_seq_points_x(self,
+                                            seq_points_x,
+                                            feature_column,
+                                            class0, class1,
+                                            permutations=999,
+                                            quantiles=[2.5, 97.5],
+                                            **kwargs):
+        method = 'ripley'
+        neighborhood_matrix_type = 'radius'
+        try:
+            obj_ripley = [self.perimage_results_table.loc[(feature_column, neighborhood_matrix_type, 0, n1, 'None', permutations, quantiles[0], quantiles[1]), "ripley_results"] for n1 in seq_points_x[1:]]
+        except Exception:
+            print("Ripley has not been computed on {} with {}".format(feature_column, seq_points_x))
+            return 
+
+
+        types = np.unique(self.feature_table[feature_column])
+        n_types = len(types)
+        if not class0 in types:
+            raise ValueError("class0 {} is not in types {}".format(class0, types))
+        if not class1 in types:
+            raise ValueError("class1 {} is not in types {}".format(class1, types))
+
+        fig_crossK = plt.figure("Ripley_cross_functions_{}_{}_matrix-{}-{}_{}_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], permutations, quantiles[0], quantiles[1]))
+
+        c0 = np.where(types == class0)[0]
+        c1 = np.where(types == class1)[0]
+
+        cross = [obj.get_cross_function(c0, c1, **kwargs) for obj in obj_ripley]
+        cross_quantiles = np.array([obj.get_quantiles(c0, c1, **kwargs) for obj in obj_ripley])
+
+        lineplot = plt.plot(seq_points_x[1:], cross, 'o-', label='({}, {})'.format(class0, class1))
+        plt.plot(seq_points_x[1:], cross_quantiles[:,0],'+--', c=lineplot[0].get_color())
+        plt.plot(seq_points_x[1:], cross_quantiles[:,1], '+--', c=lineplot[0].get_color())
+        plt.fill_between(seq_points_x[1:], y1=cross_quantiles[:,0], y2=cross_quantiles[:,1], alpha=0.2)
         plt.xlabel(neighborhood_matrix_type)
-        plt.ylabel('{} statistics'.format(method))
+        plt.legend()
+
+
+    def plot_ripley_diff(self, 
+                        feature_column,
+                        neighborhood_min_p0,
+                        neighborhood_max_p1,
+                        class0, class1, class2, class3,
+                        **kwargs):
+
+
+        ''' Plots one feature at a time. 
+            Checks if the computing has been done.
+            Retrieves info from perimage_results_table.
+
+            :feature_column: str
+                              features' name from feature_table.
+                              
+            :method: str
+                     can be 
+                     - 'assortativity' or 'ripley' (for categorical features), 
+                     - 'moran', 'geary', 'getisord' (global spatial autocorrelation for continuous features)
+
+            :neighborhood_matrix_type: str
+                                        should be 'k', 'radius', or 'network'
+                                        Same 'neighborhood_matrix_type' for all the points in the correlogram.
+
+            :neighborhood_min_p0: int or float
+                                  minimum bound for the neighborhood.
+                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
+            :neighborhood_min_p1: int or float
+                                  maximum bound for the neighborhood.
+                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
+            
+
+            :neighborhood_step: int or float
+                                a step in terms of parameters ([p0, p0+step, p0+2step, ...p1])
+                                should be int for 'k' or 'network'. Can be int or float for 'radius' 
+                                one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.
+
+            :nb_pairs_step: int
+                            a step in terms of number of pairs for each test.
+                            Overlooked if neighborhood_step is provided.
+
+            :nb_test_points: int
+                             a number of test points.
+                             Overlooked if neighborhood_step or nb_pairs_step are provided.
+
+        '''
+        neighborhood_matrix_type = 'radius'
+        seq_points_x = self._check_correlogram_input_arguments(neighborhood_matrix_type, 
+                                           neighborhood_min_p0, 
+                                           neighborhood_max_p1, 
+                                           **kwargs)
+
+        self._plot_ripley_diff_from_seq_points_x(seq_points_x,
+                                            feature_column,
+                                            class0, class1, class2, class3,
+                                            **kwargs)
+
+
+
+    def _plot_ripley_diff_from_seq_points_x(self,
+                                            seq_points_x,
+                                            feature_column,
+                                            class0, class1, class2, class3,
+                                            quantiles=[2.5, 97.5],
+                                            permutations=999,
+                                            **kwargs):
+        method = 'ripley'
+        neighborhood_matrix_type = 'radius'
+
+        try:
+            obj_ripley = [self.perimage_results_table.loc[(feature_column, neighborhood_matrix_type, 0, n1, 'None', permutations, quantiles[0], quantiles[1]), "ripley_results"] for n1 in seq_points_x[1:]]
+        except Exception:
+            print("Ripley has not been computed on {} with {}".format(feature_column, seq_points_x))
+            return
+
+        types = np.unique(self.feature_table[feature_column])
+        n_types = len(types)
+
+        if not class0 in types:
+            raise ValueError("class0 {} is not in types {}".format(class0, types))
+        if not class1 in types:
+            raise ValueError("class1 {} is not in types {}".format(class1, types))
+        if not class2 in types:
+            raise ValueError("class2 {} is not in types {}".format(class2, types))
+        if not class3 in types:
+            raise ValueError("class3 {} is not in types {}".format(class3, types))
+
+        fig_diffcrossK = plt.figure("Ripley_diff_cross_functions_{}_{}_matrix-{}-{}-{}_permutations-{}_quantiles-{}-{}".format(feature_column, method, neighborhood_matrix_type, seq_points_x[0], seq_points_x[-1], permutations, quantiles[0], quantiles[1])) 
+
+        c0 = np.where(types == class0)[0]
+        c1 = np.where(types == class1)[0]
+        c2 = np.where(types == class2)[0]
+        c3 = np.where(types == class3)[0]
+
+        diff = [obj.get_diff_cross_function(c0, c1, c2, c3, **kwargs) for obj in obj_ripley]
+        diff_quantiles = np.array([obj.get_diff_quantiles(c0, c1, c2, c3, **kwargs) for obj in obj_ripley])
+
+
+        lineplot = plt.plot(seq_points_x[1:], diff, 'o-', label='({}, {}) - ({}, {})'.format(class0, class1, class2, class3))
+        plt.plot(seq_points_x[1:], diff_quantiles[:,0],'--', c=lineplot[0].get_color())
+        plt.plot(seq_points_x[1:], diff_quantiles[:,1], '--', c=lineplot[0].get_color())
+        plt.fill_between(seq_points_x[1:], y1=diff_quantiles[:,0], y2=diff_quantiles[:,1], alpha=0.5)
+        plt.xlabel(neighborhood_matrix_type)
+        plt.legend()
 
 
 
     def get_hot_spots_image(self, feature_column, method,
-                   neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations=None, **kwargs):
+                   neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, 
+                   plot_bool=False, **kwargs):
+        """ Returns a numpy array with the hot and cold spots image if plot_bool=False.
+            Plots the hot and cold spots image and returns the numpy array and the matplotlib figure
+
+            :feature_columns: list of str
+                              features' names from feature_table.
+                              All features will be tested on the same neighborhood matrices and with the same analysis method
+                              
+            :method: str
+                     can be 
+                     - 'assortativity' or 'ripley' (for categorical features), 
+                     - 'moran', 'geary', 'getisord' (global spatial autocorrelation for continuous features)
+
+            :neighborhood_matrix_type: str
+                                        should be 'k', 'radius', or 'network'
+                                        Same 'neighborhood_matrix_type' for all the points in the correlogram.
+
+            :neighborhood_min_p0: int or float
+                                  minimum bound for the neighborhood.
+                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
+            :neighborhood_min_p1: int or float
+                                  maximum bound for the neighborhood.
+                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
+
+            :plot_bool: bool
+                        if True, returns the numpy array and the figure with the plot
+                        if False, returns onyl the numpy array
+
+        """
 
         if method not in self.local_sa_methods:
             raise ValueError('method should be {}'.format(self.local_sa_methods))
 
-        suffix = self.get_suffix(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations=iterations)
+        suffix = self.get_suffix(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)
 
         low_quantile = self.feature_table.loc[:, "local_{}_{}_{}_low_quantile".format(method, feature_column, suffix)].values
         high_quantile = self.feature_table.loc[:, "local_{}_{}_{}_high_quantile".format(method, feature_column, suffix)].values
         values = self.feature_table.loc[:, "local_{}_{}_{}_stats".format(method, feature_column, suffix)].values
-        values[(values <= high_quantile)*(values>=low_quantile)] = np.nan
-        return self.get_feature_filled_image(values, **kwargs)
+        values[(values<=high_quantile) * (values>=low_quantile)] = np.nan
+
+        im = self.get_feature_filled_image(values, **kwargs)
+
+        if plot_bool:
+
+            fig = plt.figure()
+            if method.lower() == 'getisord':
+                cmap = plt.get_cmap('RdBu')
+            elif method.lower() =='moran':
+                cmap = plt.get_cmap('bwr')
+            plt.imshow(im, cmap=cmap, vmin=0, vmax=1.)
+            plt.colorbar()
+
+            return im, fig
+
+        else:
+            return im
 
 

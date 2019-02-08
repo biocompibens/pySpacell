@@ -190,7 +190,7 @@ class SpatialAutocorrelation(object):
             print("in _apply_method_to_vector", w.full()[0].shape, X.shape, cond_X.shape, cond.shape)
 
         w_full = (w.full()[0])[cond_X,:][:,cond_X]
-        w = pysal.weights.util.full2W(w_full)
+        w = pysal.lib.weights.full2W(w_full)
         X = X[cond_X]
 
         if np.sum(cond_X) <= 2:
