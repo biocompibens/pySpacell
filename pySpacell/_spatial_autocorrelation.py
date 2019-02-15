@@ -145,8 +145,9 @@ class SpatialAutocorrelation(object):
         self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_p_val".format(method.lower(), feature_column, suffix)] = method_comput.p_sim
         self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_z_val".format(method.lower(), feature_column, suffix)] = method_comput.z_sim
         self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_stats".format(method.lower(), feature_column, suffix)] = get_stats(method_comput) 
-        self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_low_quantile".format(method.lower(), feature_column, suffix)] = np.percentile(method_comput.sim, quantiles[0])
-        self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_high_quantile".format(method.lower(), feature_column, suffix)] = np.percentile(method_comput.sim, quantiles[1])
+
+        self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_low_quantile".format(method.lower(), feature_column, suffix)] = np.percentile(method_comput.sim, quantiles[0], axis=0)
+        self.feature_table.loc[cond&cond_X, "local_{}_{}_{}_high_quantile".format(method.lower(), feature_column, suffix)] = np.percentile(method_comput.sim, quantiles[1], axis=0)
 
 
 
@@ -183,8 +184,6 @@ class SpatialAutocorrelation(object):
 
         big_X = self.feature_table.loc[:,f].values
         big_cond_X = (~np.isinf(big_X))&(~np.isnan(big_X))
-
-        cond_X = (~np.isinf(X))&(~np.isnan(X))
 
         if self._debug:
             print("in _apply_method_to_vector", w.full()[0].shape, X.shape, cond_X.shape, cond.shape)

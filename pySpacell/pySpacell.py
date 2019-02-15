@@ -319,7 +319,29 @@ class Spacell(NeighborhoodMatrixComputation,
                                            neighborhood_max_p1, 
                                            **kwargs):
         
-        if 'neighborhood_step' in kwargs:
+        if 'like_network' in kwargs and kwargs.get('like_network'):
+            if neighborhood_matrix_type != 'radius':
+                raise ValueError('nb_pairs_step is only available for neighborhood_matrix_type == radius')
+            coords = self.feature_table[self._column_x_y].values
+            dist_mat = cdist(coords, coords)
+            total_number_pairs = self.n*(self.n-1)/2.
+
+            all_distances_1d = np.triu(dist_mat)
+            all_distances_1d = all_distances_1d[all_distances_1d>0]
+
+            if 'iterations' not in kwargs:
+                iterations = 1
+
+            nb_pairs_steps = [np.sum(mat)/2. for mat in self.adjacency_matrix[iterations]]
+
+            increment_percentile = np.array(nb_pairs_steps)*1./total_number_pairs*100
+
+            distance_percentiles = np.percentile(all_distances_1d, increment_percentile)
+
+            seq_points_x = [0]
+            seq_points_x.extend(distance_percentiles[np.argmax(distance_percentiles>=neighborhood_min_p0):])
+
+        elif 'neighborhood_step' in kwargs:
             neighborhood_step = kwargs.get('neighborhood_step')
             if neighborhood_step > neighborhood_max_p1 - neighborhood_min_p0 +1:
                 raise ValueError('neighborhood_step > neighborhood_max_p1-neighborhood_min_p0+1')
@@ -334,12 +356,13 @@ class Spacell(NeighborhoodMatrixComputation,
             coords = self.feature_table[self._column_x_y].values
             dist_mat = cdist(coords, coords)
             total_number_pairs = self.n*(self.n-1)/2.
-            increment_percentile = nb_pairs_step*1./total_number_pairs*100
 
             all_distances_1d = np.triu(dist_mat)
             all_distances_1d = all_distances_1d[all_distances_1d>0]
 
-            distance_percentiles = np.percentile(all_distances_1d, 
+            increment_percentile = nb_pairs_step*1./total_number_pairs*100
+
+            distance_percentiles = np.percentile(all_distances_1d,
                                 np.arange(0, 100, increment_percentile))
 
             seq_points_x = distance_percentiles[np.argmax(distance_percentiles>=neighborhood_min_p0):np.argmax(distance_percentiles>neighborhood_max_p1)+1]

@@ -685,23 +685,36 @@ class Visualization(object):
         low_quantile = self.feature_table.loc[:, "local_{}_{}_{}_low_quantile".format(method, feature_column, suffix)].values
         high_quantile = self.feature_table.loc[:, "local_{}_{}_{}_high_quantile".format(method, feature_column, suffix)].values
         values = self.feature_table.loc[:, "local_{}_{}_{}_stats".format(method, feature_column, suffix)].values
-        values[(values<=high_quantile) * (values>=low_quantile)] = np.nan
+        low_q_values = np.array(values)
+        low_q_values[values>=low_quantile] = np.nan
+        high_q_values = np.array(values)
+        high_q_values[values<=high_quantile] = np.nan 
 
-        im = self.get_feature_filled_image(values, **kwargs)
+        low_q_im = self.get_feature_filled_image(low_q_values, **kwargs)
+        high_q_im = self.get_feature_filled_image(high_q_values, **kwargs)
 
         if plot_bool:
 
             fig = plt.figure()
             if method.lower() == 'getisord':
-                cmap = plt.get_cmap('RdBu')
+                cmap1 = plt.get_cmap('Reds_r')
+                cmap2 = plt.get_cmap('Blues')
             elif method.lower() =='moran':
-                cmap = plt.get_cmap('bwr')
-            plt.imshow(im, cmap=cmap, vmin=0, vmax=1.)
+                cmap1 = plt.get_cmap('Blues_r')
+                cmap2 = plt.get_cmap('Reds')
+
+            plt.subplot(1,2,1)
+            plt.title("Low quantiles")
+            plt.imshow(low_q_im, cmap=cmap1, vmax=np.nanmax(low_quantile))
+            plt.colorbar()
+            plt.subplot(1,2,2)
+            plt.title("High quantiles")
+            plt.imshow(high_q_im, cmap=cmap2, vmin=np.nanmin(high_quantile))
             plt.colorbar()
 
-            return im, fig
+            return low_q_im, high_q_im, fig
 
         else:
-            return im
+            return low_q_im, high_q_im
 
 
