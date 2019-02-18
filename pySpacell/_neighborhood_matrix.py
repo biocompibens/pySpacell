@@ -6,6 +6,9 @@ import pysal
 import cv2
 import scipy
 import scipy.spatial as spatial
+from scipy.ndimage import morphological_gradient
+from skimage.future import graph
+import networkx as nx
 
 
 class NeighborhoodMatrixComputation(object):
@@ -264,61 +267,28 @@ class NeighborhoodMatrixComputation(object):
         '''
         
         labels = np.unique(self.feature_table[self._column_objectnumber].values)
-        #np.sort(list(set(np.unique(self.image_label[self.image_label > 0].flatten())).intersection(np.unique(self.feature_table[self._column_objectnumber]))))
+        custom_image_label = self.image_label.copy()
+        custom_image_label[~np.isin(custom_image_label, labels)] = 0
 
         if self._debug:
             print("_get_neighbors_from_label_image\n#labels = {}; #objects = {}, starting label id = {}, iterations={}".format(len(labels), self.n, min(labels), iterations))
 
-        # self.feature_table['neighbors_{}'.format(suffix)] = np.empty((self.n, 0)).tolist()
-        # self.feature_table['NumberNeighbors_{}'.format(suffix)] = 0
+        all_borders = (morphological_gradient(custom_image_label, size=3) > 0)
+        label_rag = graph.rag_boundary(custom_image_label, all_borders.astype(float), connectivity=iterations)
+        label_rag.remove_node(0)
 
-        sum_neighbors = []
-        if save_neighbors:
-            list_neighbors = []
-
-        adj_mat = np.zeros((self.n, self.n))
-        if self._debug:
-            print("_get_neighbors_from_label_image", adj_mat.shape)
-        for index_l, l in enumerate(labels):
-            list_neighbor, sum_neighbor = self._get_label_neighbors(l, iterations)
-            sum_neighbors.append(sum_neighbor)
-            if save_neighbors:
-                list_neighbors.append(list_neighbor)
-            if len(list_neighbor) > 0:
-                adj_mat[index_l, np.isin(labels, list_neighbor)] = 1
+        adj_mat = np.array(nx.adjacency_matrix(label_rag).todense())
+        sum_neighbors = np.sum(adj_mat, axis=0)
 
         self.adjacency_matrix[iterations] = [adj_mat]
 
         if self._debug:
             print("_get_neighbors_from_label_image", suffix)
-            
+            print("_get_neighbors_from_label_image", len(sum_neighbors), len(labels), self.n)      
+
         self.feature_table.loc[self.feature_table[self._column_objectnumber].isin(labels), 'NumberNeighbors_{}'.format(suffix)] = sum_neighbors
 
         if save_neighbors:
             index_for_series = self.feature_table.index[self.feature_table[self._column_objectnumber].isin(labels)]
-            self.feature_table.loc[self.feature_table[self._column_objectnumber].isin(labels), 'neighbors_{}'.format(suffix)] = pd.Series(list_neighbors, index=index_for_series)
+            self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = self.feature_table[self._column_objectnumber].apply(lambda v: label_rag.neighbors(v))
 
-
-    def _get_label_neighbors(self, 
-                                label,
-                                iterations):
-        
-        binary = np.zeros(self.image_label.shape)
-        binary[self.image_label == label] = 1
-
-        dilated = cv2.dilate(binary, np.ones((3,3)), iterations=iterations)
-        neighbor = np.unique(self.image_label[dilated == 1])
-
-        ## remove the picked cells itself
-        index = np.argwhere(neighbor == label)
-        neighbor = np.delete(neighbor, index)
-
-        ## remove background as neighbor
-        index = np.argwhere(neighbor <= 0)
-        neighbor = np.delete(neighbor, index)
-
-        ## remove neighbors that are not in self.feature_table
-        neighbor_mask = np.isin(neighbor, self.feature_table[self._column_objectnumber].values)
-        list_neighbor = list(neighbor[neighbor_mask])
-        sum_neighbor = np.sum(neighbor_mask)
-        return list_neighbor, sum_neighbor
