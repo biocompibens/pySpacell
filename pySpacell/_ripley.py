@@ -61,6 +61,11 @@ class Ripley(object):
                                   feature_column,
                                   permutations,
                                   **kwargs)
+
+        if self._debug:
+            nameoutputfile = "shuffled_labels_{}_npermutations-{}_ncontrolleddistances-{}.txt".format(feature_column, permutations, kwargs.get("n_controlled_distances"))
+            np.savetxt(nameoutputfile, shuffled_labels)
+
         print(shuffled_labels[0].shape, product.shape)
 
         ripley_cross = np.zeros((len(classes), len(classes)))
