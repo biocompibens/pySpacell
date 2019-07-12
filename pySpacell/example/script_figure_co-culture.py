@@ -57,7 +57,7 @@ spa_co.correlogram('cell_type',
                    'k',
                    0,
                    30,
-                   nb_test_points=8,
+                   nb_test_points=6,
                    permutations=n_permutations,
                    plot_bool=True)
 

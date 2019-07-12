@@ -436,6 +436,13 @@ class Visualization(object):
             plt.fill_between(seq_points_x[1:], low_q, high_q, where=high_q>=low_q, alpha=0.5, color=lineplot[0].get_color())
             plt.legend()
             plt.title(feature_column)
+            if neighborhood_matrix_type == 'radius':
+                plt.xticks(ticks=seq_points_x[1:], 
+                           labels=["[{:.0f},{:.0f}]".format(seq_points_x[i], seq_points_x[i+1]) for i in range(len(seq_points_x)-1)])
+            else:
+                plt.xticks(ticks=seq_points_x[1:], 
+                           labels=["[{},{}]".format(max(1, seq_points_x[i]), seq_points_x[i+1]) for i in range(len(seq_points_x)-1)])
+
             plt.xlabel(neighborhood_matrix_type)
             plt.ylabel('{} statistics'.format(method))
 
