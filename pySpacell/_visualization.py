@@ -5,7 +5,9 @@ import pandas as pd
 import warnings
 import matplotlib.pyplot as plt
 import scipy.ndimage.filters as filters
+from skimage import measure
 from scipy.spatial import Voronoi
+from scipy.spatial.distance import cdist
 from PIL import Image, ImageDraw
 
 
@@ -654,13 +656,13 @@ class Visualization(object):
 
     def get_hot_spots_image(self, feature_column, method,
                    neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, 
-                   plot_bool=False, **kwargs):
+                   image=None, hot=True, cold=True, **kwargs):
         """ Returns a numpy array with the hot and cold spots image if plot_bool=False.
             Plots the hot and cold spots image and returns the numpy array and the matplotlib figure
 
-            :feature_columns: list of str
-                              features' names from feature_table.
-                              All features will be tested on the same neighborhood matrices and with the same analysis method
+            :feature_column: str
+                              features' name from feature_table.
+                              
                               
             :method: str
                      can be 
@@ -678,9 +680,9 @@ class Visualization(object):
                                   maximum bound for the neighborhood.
                                   should be int for 'k' or 'network'. Can be int or float for 'radius' 
 
-            :plot_bool: bool
-                        if True, returns the numpy array and the figure with the plot
-                        if False, returns onyl the numpy array
+            :image: None or numpy array. Optional
+                    if provided, hot/cold spots will be displayed on this image. If not, they will be displayed on the label ones.
+                    Default value: None
 
         """
 
@@ -689,39 +691,70 @@ class Visualization(object):
 
         suffix = self.get_suffix(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)
 
-        low_quantile = self.feature_table.loc[:, "local_{}_{}_{}_low_quantile".format(method, feature_column, suffix)].values
-        high_quantile = self.feature_table.loc[:, "local_{}_{}_{}_high_quantile".format(method, feature_column, suffix)].values
-        values = self.feature_table.loc[:, "local_{}_{}_{}_stats".format(method, feature_column, suffix)].values
-        low_q_values = np.array(values)
-        low_q_values[values>=low_quantile] = np.nan
-        high_q_values = np.array(values)
-        high_q_values[values<=high_quantile] = np.nan 
 
-        low_q_im = self.get_feature_filled_image(low_q_values, **kwargs)
-        high_q_im = self.get_feature_filled_image(high_q_values, **kwargs)
+        if self.label_image_with_border is None:
+            self._get_label_image_with_border()
+        contours = measure.find_contours(self.label_image_with_border, 0.8)
 
-        if plot_bool:
-
-            fig = plt.figure()
-            if method.lower() == 'getisord':
-                cmap1 = plt.get_cmap('Reds_r')
-                cmap2 = plt.get_cmap('Blues')
-            elif method.lower() =='moran':
-                cmap1 = plt.get_cmap('Blues_r')
-                cmap2 = plt.get_cmap('Reds')
-
-            plt.subplot(1,2,1)
-            plt.title("Low quantiles")
-            plt.imshow(low_q_im, cmap=cmap1, vmax=np.nanmax(low_quantile))
-            plt.colorbar()
-            plt.subplot(1,2,2)
-            plt.title("High quantiles")
-            plt.imshow(high_q_im, cmap=cmap2, vmin=np.nanmin(high_quantile))
-            plt.colorbar()
-
-            return low_q_im, high_q_im, fig
-
+        ax = plt.subplot(111)
+        if image is None:
+            plt.imshow(self.label_image_with_border)
         else:
-            return low_q_im, high_q_im
+            plt.imshow(image)
+
+        for n, contour in enumerate(contours):
+            ax.plot(contour[:, 1], contour[:, 0], linewidth=1, color='w', alpha=0.7)
+
+        if hot:
+            for hot_cell in self.feature_table[self.feature_table['local_{}_{}_{}_stats'.format(method, feature_column, suffix)] > self.feature_table['local_{}_{}_{}_high_quantile'.format(method, feature_column, suffix)]].iterrows():
+
+                label = hot_cell[1][self._column_objectnumber]
+                neighbors = hot_cell[1]['neighbors_{}'.format(suffix)]
+                x,y = hot_cell[1][self._column_x_y]
+
+                x_neighbors, y_neighbors = self.feature_table[self.feature_table[self._column_objectnumber].isin(neighbors)][self._column_x_y].values.T
+
+                image_label_hot_cell = np.zeros(self.image_label.shape,dtype=np.uint16)
+                image_label_hot_cell[self.image_label == label] = label
+                contour_hot_cell = measure.find_contours(image_label_hot_cell, 0.8)
+                
+
+                for n, x_n, y_n in zip(neighbors, x_neighbors, y_neighbors):
+                    image_label_neighbor = np.zeros(self.image_label.shape, dtype=np.uint16)
+                    image_label_neighbor[self.image_label == n] = n
+                    contour_neighbor = measure.find_contours(image_label_neighbor, 0.8)
+                    dist_argmin = np.argmin(cdist(contour_hot_cell[0], contour_neighbor[0]))
+                    pixel_hot_cell, pixel_neighbor = divmod(dist_argmin, contour_neighbor[0].shape[0])
+                    plt.plot([contour_hot_cell[0][pixel_hot_cell, 1], contour_neighbor[0][pixel_neighbor, 1]], 
+                             [contour_hot_cell[0][pixel_hot_cell, 0], contour_neighbor[0][pixel_neighbor, 0]], 'w-', alpha=0.7)
 
 
+                    ax.plot(contour_hot_cell[0][:,1], contour_hot_cell[0][:,0], linewidth=2, color='y')
+
+        if cold:
+            for cold_cell in self.feature_table[self.feature_table['local_{}_{}_{}_stats'.format(method, feature_column, suffix)] < self.feature_table['local_{}_{}_{}_low_quantile'.format(method, feature_column, suffix)]].iterrows():
+
+                label = cold_cell[1][self._column_objectnumber]
+                neighbors = cold_cell[1]['neighbors_{}'.format(suffix)]
+                x,y = cold_cell[1][self._column_x_y]
+
+                x_neighbors, y_neighbors = self.feature_table[self.feature_table[self._column_objectnumber].isin(neighbors)][self._column_x_y].values.T
+
+                image_label_cold_cell = np.zeros(self.image_label.shape,dtype=np.uint16)
+                image_label_cold_cell[self.image_label == label] = label
+                contour_cold_cell = measure.find_contours(image_label_cold_cell, 0.8)
+                
+
+                for n, x_n, y_n in zip(neighbors, x_neighbors, y_neighbors):
+                    image_label_neighbor = np.zeros(self.image_label.shape, dtype=np.uint16)
+                    image_label_neighbor[self.image_label == n] = n
+                    contour_neighbor = measure.find_contours(image_label_neighbor, 0.8)
+                    dist_argmin = np.argmin(cdist(contour_cold_cell[0], contour_neighbor[0]))
+                    pixel_cold_cell, pixel_neighbor = divmod(dist_argmin, contour_neighbor[0].shape[0])
+                    plt.plot([contour_cold_cell[0][pixel_cold_cell, 1], contour_neighbor[0][pixel_neighbor, 1]], 
+                             [contour_cold_cell[0][pixel_cold_cell, 0], contour_neighbor[0][pixel_neighbor, 0]], 'w-', alpha=0.7)
+
+
+                    ax.plot(contour_cold_cell[0][:,1], contour_cold_cell[0][:,0], linewidth=2, color='c')
+
+        plt.axis('off')

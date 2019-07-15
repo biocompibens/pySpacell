@@ -1,4 +1,4 @@
-#! /users/biocomp/frose/anaconda3/bin/python3
+#! /usr/bin/python3
 
 import matplotlib.pyplot as plt
 import scipy

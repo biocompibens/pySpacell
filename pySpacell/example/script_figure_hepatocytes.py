@@ -92,13 +92,14 @@ spa.compute_per_object_analysis(feature,
                             radiuses[1], 
                             iterations=iterations)
 
-low_q_im, high_q_im, fig = spa.get_hot_spots_image(feature,
+spa.get_hot_spots_image(feature,
                         sa_local_method,
                         'radius',
                         radiuses[0], 
                         radiuses[1], 
                         iterations=iterations,
-                        plot_bool=True)
+                        image=None,
+                        hot=True, cold=True)
 
 plt.show()
 
