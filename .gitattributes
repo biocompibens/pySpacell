@@ -1,0 +1,6 @@
+pySpacell/data/co-culture_label.tif filter=lfs diff=lfs merge=lfs -text
+pySpacell/data/FUCCI_label_crop.tif filter=lfs diff=lfs merge=lfs -text
+pySpacell/data/FUCCI_label.tif filter=lfs diff=lfs merge=lfs -text
+pySpacell/data/FUCCI_RGB_crop.tif filter=lfs diff=lfs merge=lfs -text
+pySpacell/data/FUCCI_RGB.tif filter=lfs diff=lfs merge=lfs -text
+pySpacell/data/hepatocytes_label.tif filter=lfs diff=lfs merge=lfs -text
