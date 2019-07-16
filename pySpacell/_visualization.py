@@ -656,9 +656,9 @@ class Visualization(object):
 
     def get_hot_spots_image(self, feature_column, method,
                    neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, 
-                   image=None, hot=True, cold=True, **kwargs):
-        """ Returns a numpy array with the hot and cold spots image if plot_bool=False.
-            Plots the hot and cold spots image and returns the numpy array and the matplotlib figure
+                   image=None, hot=True, cold=True, 
+                   contours=False, **kwargs):
+        """ Plots the hot and cold spots image 
 
             :feature_column: str
                               features' name from feature_table.
@@ -694,16 +694,25 @@ class Visualization(object):
 
         if self.label_image_with_border is None:
             self._get_label_image_with_border()
-        contours = measure.find_contours(self.label_image_with_border, 0.8)
 
+        ### plot background image
         ax = plt.subplot(111)
         if image is None:
             plt.imshow(self.label_image_with_border)
         else:
             plt.imshow(image)
 
-        for n, contour in enumerate(contours):
-            ax.plot(contour[:, 1], contour[:, 0], linewidth=1, color='w', alpha=0.7)
+        ### plot all cells
+        if contours:
+            contours_all = measure.find_contours(self.label_image_with_border, 0.8)
+            for n, contour in enumerate(contours_all):
+                ax.plot(contour[:, 1], contour[:, 0], linewidth=1, color='w', alpha=0.7, zorder=5)
+        else:
+            ax.plot(self.feature_table[self._column_x_y[0]].values, 
+                    self.feature_table[self._column_x_y[1]].values,
+                    'wo', 
+                    alpha=0.7,
+                    zorder=5)
 
         if hot:
             for hot_cell in self.feature_table[self.feature_table['local_{}_{}_{}_stats'.format(method, feature_column, suffix)] > self.feature_table['local_{}_{}_{}_high_quantile'.format(method, feature_column, suffix)]].iterrows():
@@ -714,22 +723,29 @@ class Visualization(object):
 
                 x_neighbors, y_neighbors = self.feature_table[self.feature_table[self._column_objectnumber].isin(neighbors)][self._column_x_y].values.T
 
-                image_label_hot_cell = np.zeros(self.image_label.shape,dtype=np.uint16)
-                image_label_hot_cell[self.image_label == label] = label
-                contour_hot_cell = measure.find_contours(image_label_hot_cell, 0.8)
+                if contours:
+
+                    image_label_hot_cell = np.zeros(self.image_label.shape,dtype=np.uint16)
+                    image_label_hot_cell[self.image_label == label] = label
+                    contour_hot_cell = measure.find_contours(image_label_hot_cell, 0.8)
                 
+                    for n, x_n, y_n in zip(neighbors, x_neighbors, y_neighbors):
+                        image_label_neighbor = np.zeros(self.image_label.shape, dtype=np.uint16)
+                        image_label_neighbor[self.image_label == n] = n
+                        contour_neighbor = measure.find_contours(image_label_neighbor, 0.8)
+                        dist_argmin = np.argmin(cdist(contour_hot_cell[0], contour_neighbor[0]))
+                        pixel_hot_cell, pixel_neighbor = divmod(dist_argmin, contour_neighbor[0].shape[0])
+                        plt.plot([contour_hot_cell[0][pixel_hot_cell, 1], contour_neighbor[0][pixel_neighbor, 1]], 
+                                 [contour_hot_cell[0][pixel_hot_cell, 0], contour_neighbor[0][pixel_neighbor, 0]], 'w-', alpha=0.7,
+                                 zorder=2)
 
-                for n, x_n, y_n in zip(neighbors, x_neighbors, y_neighbors):
-                    image_label_neighbor = np.zeros(self.image_label.shape, dtype=np.uint16)
-                    image_label_neighbor[self.image_label == n] = n
-                    contour_neighbor = measure.find_contours(image_label_neighbor, 0.8)
-                    dist_argmin = np.argmin(cdist(contour_hot_cell[0], contour_neighbor[0]))
-                    pixel_hot_cell, pixel_neighbor = divmod(dist_argmin, contour_neighbor[0].shape[0])
-                    plt.plot([contour_hot_cell[0][pixel_hot_cell, 1], contour_neighbor[0][pixel_neighbor, 1]], 
-                             [contour_hot_cell[0][pixel_hot_cell, 0], contour_neighbor[0][pixel_neighbor, 0]], 'w-', alpha=0.7)
+                        ax.plot(contour_hot_cell[0][:,1], contour_hot_cell[0][:,0], linewidth=2, color='y', zorder=10)
 
+                else:
+                    for x_n, y_n, in zip(x_neighbors, y_neighbors):
+                        ax.plot([x, x_n], [y, y_n], 'w-')
+                    ax.plot(x, y , 'yo', zorder=10)
 
-                    ax.plot(contour_hot_cell[0][:,1], contour_hot_cell[0][:,0], linewidth=2, color='y')
 
         if cold:
             for cold_cell in self.feature_table[self.feature_table['local_{}_{}_{}_stats'.format(method, feature_column, suffix)] < self.feature_table['local_{}_{}_{}_low_quantile'.format(method, feature_column, suffix)]].iterrows():
@@ -740,21 +756,26 @@ class Visualization(object):
 
                 x_neighbors, y_neighbors = self.feature_table[self.feature_table[self._column_objectnumber].isin(neighbors)][self._column_x_y].values.T
 
-                image_label_cold_cell = np.zeros(self.image_label.shape,dtype=np.uint16)
-                image_label_cold_cell[self.image_label == label] = label
-                contour_cold_cell = measure.find_contours(image_label_cold_cell, 0.8)
-                
+                if contours:
+                    image_label_cold_cell = np.zeros(self.image_label.shape,dtype=np.uint16)
+                    image_label_cold_cell[self.image_label == label] = label
+                    contour_cold_cell = measure.find_contours(image_label_cold_cell, 0.8)
+                    
 
-                for n, x_n, y_n in zip(neighbors, x_neighbors, y_neighbors):
-                    image_label_neighbor = np.zeros(self.image_label.shape, dtype=np.uint16)
-                    image_label_neighbor[self.image_label == n] = n
-                    contour_neighbor = measure.find_contours(image_label_neighbor, 0.8)
-                    dist_argmin = np.argmin(cdist(contour_cold_cell[0], contour_neighbor[0]))
-                    pixel_cold_cell, pixel_neighbor = divmod(dist_argmin, contour_neighbor[0].shape[0])
-                    plt.plot([contour_cold_cell[0][pixel_cold_cell, 1], contour_neighbor[0][pixel_neighbor, 1]], 
-                             [contour_cold_cell[0][pixel_cold_cell, 0], contour_neighbor[0][pixel_neighbor, 0]], 'w-', alpha=0.7)
+                    for n, x_n, y_n in zip(neighbors, x_neighbors, y_neighbors):
+                        image_label_neighbor = np.zeros(self.image_label.shape, dtype=np.uint16)
+                        image_label_neighbor[self.image_label == n] = n
+                        contour_neighbor = measure.find_contours(image_label_neighbor, 0.8)
+                        dist_argmin = np.argmin(cdist(contour_cold_cell[0], contour_neighbor[0]))
+                        pixel_cold_cell, pixel_neighbor = divmod(dist_argmin, contour_neighbor[0].shape[0])
+                        plt.plot([contour_cold_cell[0][pixel_cold_cell, 1], contour_neighbor[0][pixel_neighbor, 1]], 
+                                 [contour_cold_cell[0][pixel_cold_cell, 0], contour_neighbor[0][pixel_neighbor, 0]], 'w-', alpha=0.7, zorder=2)
 
+                        ax.plot(contour_cold_cell[0][:,1], contour_cold_cell[0][:,0], linewidth=2, color='c', zorder=10)
 
-                    ax.plot(contour_cold_cell[0][:,1], contour_cold_cell[0][:,0], linewidth=2, color='c')
+                else:
+                    for x_n, y_n, in zip(x_neighbors, y_neighbors):
+                        ax.plot([x, x_n], [y, y_n], 'w-', zorder=2)
+                    ax.plot(x, y, 'co', zorder=10)
 
         plt.axis('off')
