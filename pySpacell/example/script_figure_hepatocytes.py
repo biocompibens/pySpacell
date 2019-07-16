@@ -99,7 +99,20 @@ spa.get_hot_spots_image(feature,
                         radiuses[1], 
                         iterations=iterations,
                         image=None,
-                        hot=True, cold=True)
+                        hot=True, cold=True,
+                        contours=False)
+
+plt.show()
+
+spa.get_hot_spots_image(feature,
+                        sa_local_method,
+                        'radius',
+                        radiuses[0], 
+                        radiuses[1], 
+                        iterations=iterations,
+                        image=None,
+                        hot=True, cold=True,
+                        contours=True)
 
 plt.show()
 
