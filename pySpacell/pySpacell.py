@@ -111,7 +111,7 @@ class Spacell(NeighborhoodMatrixComputation,
                                  labels=[[] for _ in range(len(names_for_index))],
                                  names=names_for_index)
         ### to store results per image, not per self
-        cell.perimage_results_table = pd.DataFrame(index=my_index)
+        self.perimage_results_table = pd.DataFrame(index=my_index)
 
 
 
@@ -249,7 +249,7 @@ class Spacell(NeighborhoodMatrixComputation,
             :neighborhood_p1: int or float
                               maximum bound for the neighborhood.
                               should be int for 'k' or 'network'. Can be int or float for 'radius'
-                              
+
         '''
 
         neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)
