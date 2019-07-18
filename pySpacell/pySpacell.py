@@ -51,12 +51,19 @@ class Spacell(NeighborhoodMatrixComputation,
                            path to csv file where each row contains information of one object (cell).
                            File must contain a column (column_objectnumber) with corresponding object id from the label image.
                            File must contain 2 columns (column_x_y) with corresponding coordinates of the object (cell) center.
+
+
             :image_label_file: str
                                path to label image. Gray scale image where pixel values are corresponding to object ids.
+
+
             :column_x_y: list of str
                          2 column names for x and y coordinates in feature_file
+
+
             :column_objectnumber: str 
                                   column name for object number (corresponding to label image) in feature file
+
         '''
 
         if not os.path.exists(feature_file):
@@ -103,8 +110,8 @@ class Spacell(NeighborhoodMatrixComputation,
         my_index = pd.MultiIndex(levels=[[] for _ in range(len(names_for_index))],
                                  labels=[[] for _ in range(len(names_for_index))],
                                  names=names_for_index)
-        ### to store results per image, not per cell
-        self.perimage_results_table = pd.DataFrame(index=my_index)
+        ### to store results per image, not per self
+        cell.perimage_results_table = pd.DataFrame(index=my_index)
 
 
 
@@ -115,28 +122,52 @@ class Spacell(NeighborhoodMatrixComputation,
                           iterations = 'None',
                           pysal_object = False,
                           **kwargs):
-        ''' Return the neighborhood matrix for specified parameters if already computed, thraw a ValueError otherwise.
-            3 modes are available: 
-                - 'k' for k-nearest neighbors;
-                - 'radius' for neighbors at an euclidean distance;
-                - 'network' for neighbors from the object graph (touching objects are neighbors) 
-            For each mode, an interval is requested to know which neighbors to include.
 
-            Examples: 'k', 2, 4               -> 2nd, 3rd, and 4th-nearest neighbors
-                      'radius', 50.75, 100.85 -> neighbors at an euclidean distance falling between 50.75 pixels and 100.85 pixels
-                      'network', 0, 1         -> neighbors having boundaries touching 
+        ''' 
+        Return the neighborhood matrix for specified parameters if already computed, thraw a ValueError otherwise.
+        3 modes are available: 
 
-            :neighborhood_matrix_type: str
-                                       should be 'k', 'radius', or 'network'
-            :neighborhood_p0: int or float
-                              minimum bound for the neighborhood.
-                              should be int for 'k' or 'network'. Can be int or float for 'radius'
-            :neighborhood_p1: int or float
-                              maximum bound for the neighborhood.
-                              should be int for 'k' or 'network'. Can be int or float for 'radius'
-            :pysal_object: bool 
-                           if True, return a pysal.lib.weights object
-                           if False, return a tuple (W, L) with W full numpy neighborhood matrix and L list of vertices' ids
+
+        1) 'k' for k-nearest neighbors;
+
+
+        2) 'radius' for neighbors at an euclidean distance;
+
+
+        3) 'network' for neighbors from the object graph (touching objects are neighbors) 
+
+
+        For each mode, an interval is requested to know which neighbors to include.
+
+
+        Examples: 
+
+            'k', 2, 4               -> 2nd, 3rd, and 4th-nearest neighbors
+                  
+
+            'radius', 50.75, 100.85 -> neighbors at an euclidean distance falling between 50.75 pixels and 100.85 pixels
+        
+            'network', 0, 1         -> neighbors having boundaries touching 
+
+
+        :neighborhood_matrix_type: str
+                                   should be 'k', 'radius', or 'network'
+
+
+        :neighborhood_p0: int or float
+                          minimum bound for the neighborhood.
+                          should be int for 'k' or 'network'. Can be int or float for 'radius'
+
+
+        :neighborhood_p1: int or float
+                          maximum bound for the neighborhood.
+                          should be int for 'k' or 'network'. Can be int or float for 'radius'
+
+
+        :pysal_object: bool 
+                       if True, return a pysal.lib.weights object
+                       if False, return a tuple (W, L) with W full numpy neighborhood matrix and L list of vertices' ids
+        
         '''
 
         neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations)
@@ -208,12 +239,17 @@ class Spacell(NeighborhoodMatrixComputation,
 
             :neighborhood_matrix_type: str
                                        should be 'k', 'radius', or 'network'
+
+
             :neighborhood_p0: int or float
                               minimum bound for the neighborhood.
                               should be int for 'k' or 'network'. Can be int or float for 'radius'
+
+
             :neighborhood_p1: int or float
                               maximum bound for the neighborhood.
                               should be int for 'k' or 'network'. Can be int or float for 'radius'
+                              
         '''
 
         neighborhood_p0, neighborhood_p1, iterations = self._check_neighborhood_matrix_parameters(neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, **kwargs)

@@ -6,7 +6,6 @@ import collections
 
 class Assortativity(object):
 
-
     def _compute_assortativity(self,
                               feature_column, 
                               neighborhood_matrix_type,

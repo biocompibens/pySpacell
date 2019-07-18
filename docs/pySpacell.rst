@@ -1,38 +1,42 @@
 pySpacell package
 =================
 
-Submodules
-----------
-
-pySpacell.pySpacell module
+pySpacell module
 --------------------------
 
 .. automodule:: pySpacell.pySpacell
-    :members: 
-    :undoc-members:
+   :members:
+   :undoc-members:
 
 
 
-Module contents
----------------
-
-.. automodule:: pySpacell
+.. autoclass:: pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation
     :members:
+
+.. autoclass:: pySpacell._assortativity.Assortativity
+    :members:
+    :private-members:
+
+.. autoclass:: pySpacell._ripley.Ripley
+    :members:
+    :private-members:
+
+
+.. autoclass:: pySpacell._spatial_autocorrelation.SpatialAutocorrelation
+    :members:
+    :private-members:
+
+.. autoclass:: pySpacell._visualization.Visualization
+    :members:
+    :private-members:
+
+
+
+Submodule
+----------------------
+
+.. autoclass:: pySpacell._ripley.RipleyObject
+    :members:
+    :private-members:
     :undoc-members:
 
-.. automodule:: pySpacell.pySpacell._assortativity
-.. automodule:: pySpacell.pySpacell._neighborhood_matrix
-.. automodule:: pySpacell.pySpacell._ripley
-.. automodule:: pySpacell.pySpacell._spatial_autocorrelation
-.. automodule:: pySpacell.pySpacell._visualization
-
-
-.. autoclass:: pySpacell.Spacell
-    :members: 
-
-.. autoclass:: pySpacell.pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation
-.. autoclass:: pySpacell.pySpacell._assortativity.Assortativity
-.. autoclass:: pySpacell.pySpacell._ripley.Ripley
-.. autoclass:: pySpacell.pySpacell._ripley.RipleyObject
-.. autoclass:: pySpacell.pySpacell._spatial_autocorrelation.SpatialAutocorrelation
-.. autoclass:: pySpacell.pySpacell._visualization.Visualization

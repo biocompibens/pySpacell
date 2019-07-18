@@ -14,4 +14,4 @@ Documentation
 
 from pySpacell.pySpacell import Spacell
 
-__all__ = [Spacell]
+__all__ = ['Spacell']

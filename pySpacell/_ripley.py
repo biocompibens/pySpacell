@@ -14,19 +14,20 @@ class Ripley(object):
                         quantiles=[2.5, 97.5],
                         **kwargs):
 
-        ''' Computes Ripley's K cross-function. Only works with 'radius' neighborhood matrix type.
-            Stores results in the dataframe perimage_results_table.
+        '''
+        Computes Ripley's K cross-function. Only works with 'radius' neighborhood matrix type.
+        Stores results in the dataframe perimage_results_table.
 
-            :feature_column: str
-                              features' name from feature_table.
+        :feature_column: str
+                          features' name from feature_table.
 
-            :radius: int or float
-                     maximum distance at which objects are considered save_neighbors
+        :radius: int or float
+                 maximum distance at which objects are considered save_neighbors
 
-            :permutations: int
-                           number of random permutations to compute the quantiles and p-value
-            :quantiles: list of 2 float
-                        quantiles, 2 numbers between 0 and 100
+        :permutations: int
+                       number of random permutations to compute the quantiles and p-value
+        :quantiles: list of 2 float
+                    quantiles, 2 numbers between 0 and 100
         '''
 
         area = self.image_label.size

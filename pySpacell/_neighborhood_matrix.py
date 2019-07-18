@@ -18,31 +18,32 @@ class NeighborhoodMatrixComputation(object):
                               neighborhood_p0,
                               neighborhood_p1,
                               **kwargs):
-        ''' Computes the neighborhood matrix from the label image as a pysal object. 
-            Stores it in the dataframe neighborhood_matrix_df.
+        ''' 
+        Computes the neighborhood matrix from the label image as a pysal object. 
+        Stores it in the dataframe neighborhood_matrix_df.
 
-            :neighborhood_matrix_type: str
-                                        should be 'k', 'radius', or 'network'
+        :neighborhood_matrix_type: str
+                                    should be 'k', 'radius', or 'network'
 
-            :neighborhood_min_p0: int or float
-                                  minimum bound for the neighborhood.
-                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
-            :neighborhood_min_p1: int or float
-                                  maximum bound for the neighborhood.
-                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
-            :iterations: int. Optional
-                         Only used for 'network' neighborhood computation mode.
-                         Number of iterations of dilation to select the object neighbors from the label image.
-                         Default value: 1
+        :neighborhood_min_p0: int or float
+                              minimum bound for the neighborhood.
+                              should be int for 'k' or 'network'. Can be int or float for 'radius' 
+        :neighborhood_min_p1: int or float
+                              maximum bound for the neighborhood.
+                              should be int for 'k' or 'network'. Can be int or float for 'radius' 
+        :iterations: int. Optional
+                     Only used for 'network' neighborhood computation mode.
+                     Number of iterations of dilation to select the object neighbors from the label image.
+                     Default value: 1
 
-            :kd_tree_approx: boolean. Optional 
-                             Used for 'radius' and 'k'.
-                             If set to True, then use a kd-tree to find kNN. 
-                             Else compute all pair distances.
+        :kd_tree_approx: boolean. Optional 
+                         Used for 'radius' and 'k'.
+                         If set to True, then use a kd-tree to find kNN. 
+                         Else compute all pair distances.
 
-            :save_neighbors: bool 
-                             if True, will add a column to feature_table with the ids of neighbors
-                             if False, do not keep the ids of neighbors
+        :save_neighbors: bool 
+                         if True, will add a column to feature_table with the ids of neighbors
+                         if False, do not keep the ids of neighbors
         '''
 
         if self._debug:
@@ -259,11 +260,12 @@ class NeighborhoodMatrixComputation(object):
                                         iterations=1, 
                                         save_neighbors=True,
                                         **kwargs):
-        ''' From the image_label, find all_neighbors
-            Assumes that the labels on the image are the same as in the feature table.
+        ''' 
+        From the image_label, find all_neighbors
+        Assumes that the labels on the image are the same as in the feature table.
+        On the label image, 0 is bg
+        objectNumbers start at 1
 
-            on the label image, 0 is bg
-            objectNumbers start at 1
         '''
         
         labels = np.unique(self.feature_table[self._column_objectnumber].values)

@@ -19,15 +19,21 @@ class Visualization(object):
                                  with_border=True, 
                                  voronoi_bool=False,
                                  **kwargs):
-        ''' Fills the image with values from column_to_display.
-            :column_to_display: str
-                                column name from feature table with values you want to display
-            :with_border: bool 
-                          if True, will add a border of background-colored pixels between each object
-                          if False, objects will touch each other like in provided label image_label
-            :voronoi_bool: bool
-                           if True, computes the voronoi tessalation from the object centers
-                           if False, will color only the delimited object area provided by label image 
+
+        '''
+        Fills the image with values from column_to_display.
+
+        :column_to_display: str
+                            column name from feature table with values you want to display
+
+        :with_border: bool 
+                      if True, will add a border of background-colored pixels between each object
+                      if False, objects will touch each other like in provided label image_label
+
+        :voronoi_bool: bool
+                       if True, computes the voronoi tessalation from the object centers
+                       if False, will color only the delimited object area provided by label image 
+
         '''
 
         if isinstance(column_to_display, str):
@@ -64,27 +70,29 @@ class Visualization(object):
              cmap1='plasma', cmap2='plasma',
              **kwargs):
 
-        ''' Plots 2 filled images side by side. 
-            :column_name1: str
-                       column name from feature table which contains values for the left plot
-            :column_name2: str
-                       column name from feature table which contains values for the right plot
-            :title1: str, optional
-                    title for the left plot
-            :title2: str, optional
-                    title for the right plot
-            :cmap1: str
-                    name of a matplotlib cmap, for the left plot
-            :cmap2: str
-                    name of a matplotlib cmap, for the right plot
-            :min_value1: float
-                         minimum value of the colormap for the left plot
-            :min_value2: float
-                         minimum value of the colormap for the right plot
-            :max_value1: float
-                         maximum value of the colormap for the left plot
-            :max_value2: float
-                         maximum value of the colormap for the right plot
+        '''
+        Plots 2 filled images side by side. 
+
+        :column_name1: str
+                   column name from feature table which contains values for the left plot
+        :column_name2: str
+                   column name from feature table which contains values for the right plot
+        :title1: str, optional
+                title for the left plot
+        :title2: str, optional
+                title for the right plot
+        :cmap1: str
+                name of a matplotlib cmap, for the left plot
+        :cmap2: str
+                name of a matplotlib cmap, for the right plot
+        :min_value1: float
+                     minimum value of the colormap for the left plot
+        :min_value2: float
+                     minimum value of the colormap for the right plot
+        :max_value1: float
+                     maximum value of the colormap for the left plot
+        :max_value2: float
+                     maximum value of the colormap for the right plot
 
         '''
 

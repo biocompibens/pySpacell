@@ -1,553 +1,859 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pySpacell package &#8212; pySpacell  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <meta charset="utf-8" />
+    <title>pySpacell package &#8212; pySpacell 0.1.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="prev" title="Welcome to pySpacell’s documentation!" href="index.html" /> 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pySpacell’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pySpacell 0.1.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="pyspacell-package">
 <h1>pySpacell package<a class="headerlink" href="#pyspacell-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-pySpacell.pySpacell">
-<span id="pyspacell-pyspacell-module"></span><h2>pySpacell.pySpacell module<a class="headerlink" href="#module-pySpacell.pySpacell" title="Permalink to this headline">¶</a></h2>
+<span id="pyspacell-module"></span><h2>pySpacell module<a class="headerlink" href="#module-pySpacell.pySpacell" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pySpacell.pySpacell.Spacell">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell.</code><code class="descname">Spacell</code><span class="sig-paren">(</span><em>feature_file, image_label_file, column_objectnumber='ObjectNumber', column_x_y=['x', 'y']</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell.pySpacell.</code><code class="sig-name descname">Spacell</code><span class="sig-paren">(</span><em class="sig-param">feature_file, image_label_file, column_objectnumber='ObjectNumber', column_x_y=['x', 'y']</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="pySpacell.pySpacell.Spacell.compute_per_image_analysis">
-<code class="descname">compute_per_image_analysis</code><span class="sig-paren">(</span><em>feature_columns</em>, <em>method</em>, <em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.compute_per_image_analysis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_per_image_analysis</code><span class="sig-paren">(</span><em class="sig-param">feature_columns</em>, <em class="sig-param">method</em>, <em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.compute_per_image_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes per image spatial analysis tests for the provided features for one neighborhood matrix.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Feature_columns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">list of str
+<dl class="field-list simple">
+<dt class="field-odd">Feature_columns</dt>
+<dd class="field-odd"><p>list of str
 features’ names from feature_table.
-All features will be tested on the same neighborhood matrix and with the same analysis method.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Method:</th><td class="field-body">str
+All features will be tested on the same neighborhood matrix and with the same analysis method.</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
 can be 
 - ‘assortativity’ or ‘ripley’ (for categorical features), 
-- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_min_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_min_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pySpacell.pySpacell.Spacell.compute_per_object_analysis">
-<code class="descname">compute_per_object_analysis</code><span class="sig-paren">(</span><em>feature_columns</em>, <em>method</em>, <em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.compute_per_object_analysis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_per_object_analysis</code><span class="sig-paren">(</span><em class="sig-param">feature_columns</em>, <em class="sig-param">method</em>, <em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.compute_per_object_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes per object spatial analysis tests for the provided features for one neighborhood matrix.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Feature_columns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">list of str
+<dl class="field-list simple">
+<dt class="field-odd">Feature_columns</dt>
+<dd class="field-odd"><p>list of str
 features’ names from feature_table.
-All features will be tested on the same neighborhood matrices and with the same analysis method</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Method:</th><td class="field-body">str
-can be ‘moran’ or’getisord’ (local spatial autocorrelation for continuous features)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_min_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+All features will be tested on the same neighborhood matrices and with the same analysis method</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
+can be ‘moran’ or’getisord’ (local spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_min_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pySpacell.pySpacell.Spacell.correlogram">
-<code class="descname">correlogram</code><span class="sig-paren">(</span><em>feature_columns</em>, <em>method</em>, <em>neighborhood_matrix_type</em>, <em>neighborhood_min_p0</em>, <em>neighborhood_max_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.correlogram" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">correlogram</code><span class="sig-paren">(</span><em class="sig-param">feature_columns</em>, <em class="sig-param">method</em>, <em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_min_p0</em>, <em class="sig-param">neighborhood_max_p1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.correlogram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a serie of spatial analysis tests for the provided features. Gives one value for the image.
 The starting and ending neighborhood parameters, neighborhood_p0 and neighborhood_p1, are to be set. 3 modes are available to define the intermediary neighborhood parameters.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Feature_columns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">list of str
+<dl class="field-list simple">
+<dt class="field-odd">Feature_columns</dt>
+<dd class="field-odd"><p>list of str
 features’ names from feature_table.
-All features will be tested on the same neighborhood matrices and with the same analysis method</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Method:</th><td class="field-body">str
+All features will be tested on the same neighborhood matrices and with the same analysis method</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
 can be 
 - ‘assortativity’ or ‘ripley’ (for categorical features), 
-- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
+- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
 should be ‘k’, ‘radius’, or ‘network’
-Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_min_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_min_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_step:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Neighborhood_step</dt>
+<dd class="field-even"><p>int or float
 a step in terms of parameters ([p0, p0+step, p0+2step, …p1])
 should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’ 
-one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Nb_pairs_step:</th><td class="field-body">int
+one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.</p>
+</dd>
+<dt class="field-odd">Nb_pairs_step</dt>
+<dd class="field-odd"><p>int
 a step in terms of number of pairs for each test.
-Overlooked if neighborhood_step is provided.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Nb_test_points:</th><td class="field-body">int
+Overlooked if neighborhood_step is provided.</p>
+</dd>
+<dt class="field-even">Nb_test_points</dt>
+<dd class="field-even"><p>int
 a number of test points.
-Overlooked if neighborhood_step or nb_pairs_step are provided.</td>
-</tr>
-</tbody>
-</table>
+Overlooked if neighborhood_step or nb_pairs_step are provided.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pySpacell.pySpacell.Spacell.get_neighborhood_matrix">
-<code class="descname">get_neighborhood_matrix</code><span class="sig-paren">(</span><em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>iterations='None'</em>, <em>pysal_object=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.get_neighborhood_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_neighborhood_matrix</code><span class="sig-paren">(</span><em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">iterations='None'</em>, <em class="sig-param">pysal_object=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.get_neighborhood_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the neighborhood matrix for specified parameters if already computed, thraw a ValueError otherwise.
 3 modes are available:</p>
-<blockquote>
-<div><ul class="simple">
-<li>‘k’ for k-nearest neighbors;</li>
-<li>‘radius’ for neighbors at an euclidean distance;</li>
-<li>‘network’ for neighbors from the object graph (touching objects are neighbors)</li>
-</ul>
-</div></blockquote>
+<ol class="arabic simple">
+<li><p>‘k’ for k-nearest neighbors;</p></li>
+<li><p>‘radius’ for neighbors at an euclidean distance;</p></li>
+<li><p>‘network’ for neighbors from the object graph (touching objects are neighbors)</p></li>
+</ol>
 <p>For each mode, an interval is requested to know which neighbors to include.</p>
-<dl class="docutils">
-<dt>Examples: ‘k’, 2, 4               -&gt; 2nd, 3rd, and 4th-nearest neighbors</dt>
-<dd>‘radius’, 50.75, 100.85 -&gt; neighbors at an euclidean distance falling between 50.75 pixels and 100.85 pixels
-‘network’, 0, 1         -&gt; neighbors having boundaries touching</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+<p>Examples:</p>
+<blockquote>
+<div><p>‘k’, 2, 4               -&gt; 2nd, 3rd, and 4th-nearest neighbors</p>
+<p>‘radius’, 50.75, 100.85 -&gt; neighbors at an euclidean distance falling between 50.75 pixels and 100.85 pixels</p>
+<p>‘network’, 0, 1         -&gt; neighbors having boundaries touching</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Pysal_object:</th><td class="field-body">bool 
-if True, return a pysal.weights object
-if False, return a tuple (W, L) with W full numpy neighborhood matrix and L list of vertices’ ids</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Pysal_object</dt>
+<dd class="field-even"><p>bool 
+if True, return a pysal.lib.weights object
+if False, return a tuple (W, L) with W full numpy neighborhood matrix and L list of vertices’ ids</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pySpacell.pySpacell.Spacell.get_suffix">
-<code class="descname">get_suffix</code><span class="sig-paren">(</span><em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.get_suffix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_suffix</code><span class="sig-paren">(</span><em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell.Spacell.get_suffix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the suffix for the additionally computed features in the feature_table: local spatial-autocorrelation statistical tests’ outputs, and neighborhood computation’s number of neighbors for each object (‘radius’ or ‘network’ neighborhood matrix type) or distance of last neighbor (‘k’ neighborhood matrix type).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+<dl class="field-list simple">
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pySpacell.pySpacell.Spacell.matrix_types">
-<code class="descname">matrix_types</code><em class="property"> = ['k', 'radius', 'network']</em><a class="headerlink" href="#pySpacell.pySpacell.Spacell.matrix_types" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">matrix_types</code><em class="property"> = ['k', 'radius', 'network']</em><a class="headerlink" href="#pySpacell.pySpacell.Spacell.matrix_types" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pySpacell.pySpacell.Spacell.precision_float_radius">
-<code class="descname">precision_float_radius</code><em class="property"> = 3</em><a class="headerlink" href="#pySpacell.pySpacell.Spacell.precision_float_radius" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">precision_float_radius</code><em class="property"> = 3</em><a class="headerlink" href="#pySpacell.pySpacell.Spacell.precision_float_radius" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-pySpacell">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pySpacell" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="python-spatial-analysis-for-cell-images-library">
-<h3>Python Spatial Analysis for Cell Images Library<a class="headerlink" href="#python-spatial-analysis-for-cell-images-library" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="documentation">
-<h4>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h4>
-</div>
-</div>
-<span class="target" id="module-pySpacell.pySpacell._assortativity"></span><span class="target" id="module-pySpacell.pySpacell._neighborhood_matrix"></span><span class="target" id="module-pySpacell.pySpacell._ripley"></span><span class="target" id="module-pySpacell.pySpacell._spatial_autocorrelation"></span><span class="target" id="module-pySpacell.pySpacell._visualization"></span><dl class="class">
-<dt id="pySpacell.Spacell">
-<em class="property">class </em><code class="descclassname">pySpacell.</code><code class="descname">Spacell</code><span class="sig-paren">(</span><em>feature_file, image_label_file, column_objectnumber='ObjectNumber', column_x_y=['x', 'y']</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.Spacell" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation">
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell._neighborhood_matrix.</code><code class="sig-name descname">NeighborhoodMatrixComputation</code><a class="headerlink" href="#pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="pySpacell.Spacell.compute_per_image_analysis">
-<code class="descname">compute_per_image_analysis</code><span class="sig-paren">(</span><em>feature_columns</em>, <em>method</em>, <em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.Spacell.compute_per_image_analysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes per image spatial analysis tests for the provided features for one neighborhood matrix.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Feature_columns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">list of str
-features’ names from feature_table.
-All features will be tested on the same neighborhood matrix and with the same analysis method.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Method:</th><td class="field-body">str
-can be 
-- ‘assortativity’ or ‘ripley’ (for categorical features), 
-- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_min_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+<dt id="pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation.compute_neighborhood_matrix">
+<code class="sig-name descname">compute_neighborhood_matrix</code><span class="sig-paren">(</span><em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation.compute_neighborhood_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the neighborhood matrix from the label image as a pysal object. 
+Stores it in the dataframe neighborhood_matrix_df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_min_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Iterations</dt>
+<dd class="field-even"><p>int. Optional
+Only used for ‘network’ neighborhood computation mode.
+Number of iterations of dilation to select the object neighbors from the label image.
+Default value: 1</p>
+</dd>
+<dt class="field-odd">Kd_tree_approx</dt>
+<dd class="field-odd"><p>boolean. Optional 
+Used for ‘radius’ and ‘k’.
+If set to True, then use a kd-tree to find kNN. 
+Else compute all pair distances.</p>
+</dd>
+<dt class="field-even">Save_neighbors</dt>
+<dd class="field-even"><p>bool 
+if True, will add a column to feature_table with the ids of neighbors
+if False, do not keep the ids of neighbors</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pySpacell._assortativity.Assortativity">
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell._assortativity.</code><code class="sig-name descname">Assortativity</code><a class="headerlink" href="#pySpacell._assortativity.Assortativity" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pySpacell._assortativity.Assortativity._compute_assortativity">
+<code class="sig-name descname">_compute_assortativity</code><span class="sig-paren">(</span><em class="sig-param">feature_column, neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, *args, iterations='None', permutations=0, quantiles=[2.5, 97.5], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._assortativity.Assortativity._compute_assortativity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes Newman’s assortativity function.
+one-sided test: only look at larger assortativity than random.
+Stores the results in the dataframe perimage_results_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Feature_column</dt>
+<dd class="field-odd"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-even">Neighborhood_matrix_type</dt>
+<dd class="field-even"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p0</dt>
+<dd class="field-odd"><p>int or float
+minimum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p1</dt>
+<dd class="field-even"><p>int or float
+maximum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Permutations</dt>
+<dd class="field-odd"><p>int
+number of random permutations to compute the quantiles and p-value</p>
+</dd>
+<dt class="field-even">Quantiles</dt>
+<dd class="field-even"><p>list of 2 float
+quantiles, 2 numbers between 0 and 100</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pySpacell._ripley.Ripley">
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell._ripley.</code><code class="sig-name descname">Ripley</code><a class="headerlink" href="#pySpacell._ripley.Ripley" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pySpacell._ripley.Ripley._compute_ripley">
+<code class="sig-name descname">_compute_ripley</code><span class="sig-paren">(</span><em class="sig-param">feature_column, radius, permutations=999, quantiles=[2.5, 97.5], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.Ripley._compute_ripley" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes Ripley’s K cross-function. Only works with ‘radius’ neighborhood matrix type.
+Stores results in the dataframe perimage_results_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Feature_column</dt>
+<dd class="field-odd"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-even">Radius</dt>
+<dd class="field-even"><p>int or float
+maximum distance at which objects are considered save_neighbors</p>
+</dd>
+<dt class="field-odd">Permutations</dt>
+<dd class="field-odd"><p>int
+number of random permutations to compute the quantiles and p-value</p>
+</dd>
+<dt class="field-even">Quantiles</dt>
+<dd class="field-even"><p>list of 2 float
+quantiles, 2 numbers between 0 and 100</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="pySpacell.Spacell.compute_per_object_analysis">
-<code class="descname">compute_per_object_analysis</code><span class="sig-paren">(</span><em>feature_columns</em>, <em>method</em>, <em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.Spacell.compute_per_object_analysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes per object spatial analysis tests for the provided features for one neighborhood matrix.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Feature_columns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">list of str
-features’ names from feature_table.
-All features will be tested on the same neighborhood matrices and with the same analysis method</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Method:</th><td class="field-body">str
-can be ‘moran’ or’getisord’ (local spatial autocorrelation for continuous features)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_min_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+<dt id="pySpacell._ripley.Ripley._get_edge_correction_area">
+<code class="sig-name descname">_get_edge_correction_area</code><span class="sig-paren">(</span><em class="sig-param">radius</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.Ripley._get_edge_correction_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corrects the estimation for the cases where the disc is not completely inside the image.
+cf Protazio</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pySpacell._spatial_autocorrelation.SpatialAutocorrelation">
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell._spatial_autocorrelation.</code><code class="sig-name descname">SpatialAutocorrelation</code><a class="headerlink" href="#pySpacell._spatial_autocorrelation.SpatialAutocorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pySpacell._spatial_autocorrelation.SpatialAutocorrelation._test_SA">
+<code class="sig-name descname">_test_SA</code><span class="sig-paren">(</span><em class="sig-param">feature_column, method, neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, permutations=999, quantiles=[2.5, 97.5], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._spatial_autocorrelation.SpatialAutocorrelation._test_SA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test spatial-autocorrelation with the selected method on the selected feature from feature_table.
+Computes one test (per feature per image). 
+Stores the result in the dataframe perimage_results_table.
+Is computed on one neighborhood matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Method</dt>
+<dd class="field-odd"><p>str
+test method. Should be moran, geary or getisord</p>
+</dd>
+<dt class="field-even">Feature_column</dt>
+<dd class="field-even"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_min_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Permutations</dt>
+<dd class="field-even"><p>int
+number of random permutations to compute the quantiles and p-value</p>
+</dd>
+<dt class="field-odd">Quantiles</dt>
+<dd class="field-odd"><p>list of 2 float
+quantiles, 2 numbers between 0 and 100</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="pySpacell.Spacell.correlogram">
-<code class="descname">correlogram</code><span class="sig-paren">(</span><em>feature_columns</em>, <em>method</em>, <em>neighborhood_matrix_type</em>, <em>neighborhood_min_p0</em>, <em>neighborhood_max_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.Spacell.correlogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a serie of spatial analysis tests for the provided features. Gives one value for the image.
-The starting and ending neighborhood parameters, neighborhood_p0 and neighborhood_p1, are to be set. 3 modes are available to define the intermediary neighborhood parameters.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Feature_columns:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">list of str
-features’ names from feature_table.
-All features will be tested on the same neighborhood matrices and with the same analysis method</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Method:</th><td class="field-body">str
+<dt id="pySpacell._spatial_autocorrelation.SpatialAutocorrelation._test_local_SA">
+<code class="sig-name descname">_test_local_SA</code><span class="sig-paren">(</span><em class="sig-param">feature_column, method, neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, permutations=999, star=False, quantiles=[2.5, 97.5], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._spatial_autocorrelation.SpatialAutocorrelation._test_local_SA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests feature for LOCAL/SINGLE-CELL spatial autocorrelation with the specified method.
+Computes one test per object.
+Stores the test results in the dataframe feature_table.
+Is computed for a given neighborhood matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Method</dt>
+<dd class="field-odd"><p>str
+test method. Should be moran or getisord</p>
+</dd>
+<dt class="field-even">Feature_column</dt>
+<dd class="field-even"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
+minimum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
+maximum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Permutations</dt>
+<dd class="field-even"><p>int
+number of random permutations to compute the quantiles and p-value</p>
+</dd>
+<dt class="field-odd">Quantiles</dt>
+<dd class="field-odd"><p>list of 2 float
+quantiles, 2 numbers between 0 and 100</p>
+</dd>
+<dt class="field-even">Star</dt>
+<dd class="field-even"><p>bool 
+Used only if method is ‘getisord’
+if star=True, includes the central object in the statistics. Hot spot analysis
+if star=False, does not include the central object in the statistics. Outlier analysis.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pySpacell._visualization.Visualization">
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell._visualization.</code><code class="sig-name descname">Visualization</code><a class="headerlink" href="#pySpacell._visualization.Visualization" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pySpacell._visualization.Visualization.get_feature_filled_image">
+<code class="sig-name descname">get_feature_filled_image</code><span class="sig-paren">(</span><em class="sig-param">column_to_display</em>, <em class="sig-param">with_border=True</em>, <em class="sig-param">voronoi_bool=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.get_feature_filled_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills the image with values from column_to_display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Column_to_display</dt>
+<dd class="field-odd"><p>str
+column name from feature table with values you want to display</p>
+</dd>
+<dt class="field-even">With_border</dt>
+<dd class="field-even"><p>bool 
+if True, will add a border of background-colored pixels between each object
+if False, objects will touch each other like in provided label image_label</p>
+</dd>
+<dt class="field-odd">Voronoi_bool</dt>
+<dd class="field-odd"><p>bool
+if True, computes the voronoi tessalation from the object centers
+if False, will color only the delimited object area provided by label image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pySpacell._visualization.Visualization.get_hot_spots_image">
+<code class="sig-name descname">get_hot_spots_image</code><span class="sig-paren">(</span><em class="sig-param">feature_column</em>, <em class="sig-param">method</em>, <em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">image=None</em>, <em class="sig-param">hot=True</em>, <em class="sig-param">cold=True</em>, <em class="sig-param">contours=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.get_hot_spots_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the hot and cold spots image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Feature_column</dt>
+<dd class="field-odd"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
 can be 
 - ‘assortativity’ or ‘ripley’ (for categorical features), 
-- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
+- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
 should be ‘k’, ‘radius’, or ‘network’
-Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_min_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_min_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_step:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Image</dt>
+<dd class="field-even"><p>None or numpy array. Optional
+if provided, hot/cold spots will be displayed on this image. If not, they will be displayed on the label ones.
+Default value: None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pySpacell._visualization.Visualization.plot_2im">
+<code class="sig-name descname">plot_2im</code><span class="sig-paren">(</span><em class="sig-param">input1</em>, <em class="sig-param">input2</em>, <em class="sig-param">cmap1='plasma'</em>, <em class="sig-param">cmap2='plasma'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.plot_2im" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots 2 filled images side by side.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Column_name1</dt>
+<dd class="field-odd"><p>str
+column name from feature table which contains values for the left plot</p>
+</dd>
+<dt class="field-even">Column_name2</dt>
+<dd class="field-even"><p>str
+column name from feature table which contains values for the right plot</p>
+</dd>
+<dt class="field-odd">Title1</dt>
+<dd class="field-odd"><p>str, optional
+title for the left plot</p>
+</dd>
+<dt class="field-even">Title2</dt>
+<dd class="field-even"><p>str, optional
+title for the right plot</p>
+</dd>
+<dt class="field-odd">Cmap1</dt>
+<dd class="field-odd"><p>str
+name of a matplotlib cmap, for the left plot</p>
+</dd>
+<dt class="field-even">Cmap2</dt>
+<dd class="field-even"><p>str
+name of a matplotlib cmap, for the right plot</p>
+</dd>
+<dt class="field-odd">Min_value1</dt>
+<dd class="field-odd"><p>float
+minimum value of the colormap for the left plot</p>
+</dd>
+<dt class="field-even">Min_value2</dt>
+<dd class="field-even"><p>float
+minimum value of the colormap for the right plot</p>
+</dd>
+<dt class="field-odd">Max_value1</dt>
+<dd class="field-odd"><p>float
+maximum value of the colormap for the left plot</p>
+</dd>
+<dt class="field-even">Max_value2</dt>
+<dd class="field-even"><p>float
+maximum value of the colormap for the right plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pySpacell._visualization.Visualization.plot_correlogram">
+<code class="sig-name descname">plot_correlogram</code><span class="sig-paren">(</span><em class="sig-param">feature_column, method, neighborhood_matrix_type, neighborhood_min_p0, neighborhood_max_p1, quantiles=[2.5, 97.5], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.plot_correlogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots one feature at a time. 
+Checks if the computing has been done.
+Retrieves info from perimage_results_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Feature_column</dt>
+<dd class="field-odd"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
+can be 
+- ‘assortativity’ or ‘ripley’ (for categorical features), 
+- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’
+Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
+minimum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
+maximum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Neighborhood_step</dt>
+<dd class="field-even"><p>int or float
 a step in terms of parameters ([p0, p0+step, p0+2step, …p1])
 should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’ 
-one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Nb_pairs_step:</th><td class="field-body">int
+one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.</p>
+</dd>
+<dt class="field-odd">Nb_pairs_step</dt>
+<dd class="field-odd"><p>int
 a step in terms of number of pairs for each test.
-Overlooked if neighborhood_step is provided.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Nb_test_points:</th><td class="field-body">int
+Overlooked if neighborhood_step is provided.</p>
+</dd>
+<dt class="field-even">Nb_test_points</dt>
+<dd class="field-even"><p>int
 a number of test points.
-Overlooked if neighborhood_step or nb_pairs_step are provided.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pySpacell.Spacell.get_neighborhood_matrix">
-<code class="descname">get_neighborhood_matrix</code><span class="sig-paren">(</span><em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>iterations='None'</em>, <em>pysal_object=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.Spacell.get_neighborhood_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the neighborhood matrix for specified parameters if already computed, thraw a ValueError otherwise.
-3 modes are available:</p>
-<blockquote>
-<div><ul class="simple">
-<li>‘k’ for k-nearest neighbors;</li>
-<li>‘radius’ for neighbors at an euclidean distance;</li>
-<li>‘network’ for neighbors from the object graph (touching objects are neighbors)</li>
-</ul>
-</div></blockquote>
-<p>For each mode, an interval is requested to know which neighbors to include.</p>
-<dl class="docutils">
-<dt>Examples: ‘k’, 2, 4               -&gt; 2nd, 3rd, and 4th-nearest neighbors</dt>
-<dd>‘radius’, 50.75, 100.85 -&gt; neighbors at an euclidean distance falling between 50.75 pixels and 100.85 pixels
-‘network’, 0, 1         -&gt; neighbors having boundaries touching</dd>
+Overlooked if neighborhood_step or nb_pairs_step are provided.</p>
+</dd>
 </dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
-minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
-maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Pysal_object:</th><td class="field-body">bool 
-if True, return a pysal.weights object
-if False, return a tuple (W, L) with W full numpy neighborhood matrix and L list of vertices’ ids</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="pySpacell.Spacell.get_suffix">
-<code class="descname">get_suffix</code><span class="sig-paren">(</span><em>neighborhood_matrix_type</em>, <em>neighborhood_p0</em>, <em>neighborhood_p1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.Spacell.get_suffix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the suffix for the additionally computed features in the feature_table: local spatial-autocorrelation statistical tests’ outputs, and neighborhood computation’s number of neighbors for each object (‘radius’ or ‘network’ neighborhood matrix type) or distance of last neighbor (‘k’ neighborhood matrix type).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_matrix_type:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">str
-should be ‘k’, ‘radius’, or ‘network’</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Neighborhood_p0:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">int or float
+<dt id="pySpacell._visualization.Visualization.plot_neighborhood">
+<code class="sig-name descname">plot_neighborhood</code><span class="sig-paren">(</span><em class="sig-param">neighborhood_matrix_type</em>, <em class="sig-param">neighborhood_p0</em>, <em class="sig-param">neighborhood_p1</em>, <em class="sig-param">image=None</em>, <em class="sig-param">with_border=True</em>, <em class="sig-param">voronoi_bool=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.plot_neighborhood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize neighbors on the label image (default) or on a provided image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
 minimum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Neighborhood_p1:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">int or float
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
 maximum bound for the neighborhood.
-should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</td>
-</tr>
-</tbody>
-</table>
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Image</dt>
+<dd class="field-even"><p>None or numpy array. Optional
+if provided, neighbors will be displayed on this image
+Default value: None</p>
+</dd>
+<dt class="field-odd">With_border</dt>
+<dd class="field-odd"><p>bool. Optional
+Default value: True
+if image not provided and if True, then display image will be label image with two pixels of background between each object
+if image not provided and if False, then display image will be label image</p>
+</dd>
+<dt class="field-even">Voronoi_bool</dt>
+<dd class="field-even"><p>bool. Optional.
+Default value: False
+if image not provided and if True, then display image will be the voronoi tessalation computed from label image
+if image not provided and if False, then display image will be the label image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pySpacell._visualization.Visualization.plot_ripley_cross">
+<code class="sig-name descname">plot_ripley_cross</code><span class="sig-paren">(</span><em class="sig-param">feature_column, neighborhood_min_p0, neighborhood_max_p1, class0, class1, quantiles=[2.5, 97.5], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.plot_ripley_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots one feature at a time. 
+Checks if the computing has been done.
+Retrieves info from perimage_results_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Feature_column</dt>
+<dd class="field-odd"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
+can be 
+- ‘assortativity’ or ‘ripley’ (for categorical features), 
+- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’
+Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
+minimum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
+maximum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Neighborhood_step</dt>
+<dd class="field-even"><p>int or float
+a step in terms of parameters ([p0, p0+step, p0+2step, …p1])
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’ 
+one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.</p>
+</dd>
+<dt class="field-odd">Nb_pairs_step</dt>
+<dd class="field-odd"><p>int
+a step in terms of number of pairs for each test.
+Overlooked if neighborhood_step is provided.</p>
+</dd>
+<dt class="field-even">Nb_test_points</dt>
+<dd class="field-even"><p>int
+a number of test points.
+Overlooked if neighborhood_step or nb_pairs_step are provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pySpacell._visualization.Visualization.plot_ripley_diff">
+<code class="sig-name descname">plot_ripley_diff</code><span class="sig-paren">(</span><em class="sig-param">feature_column</em>, <em class="sig-param">neighborhood_min_p0</em>, <em class="sig-param">neighborhood_max_p1</em>, <em class="sig-param">class0</em>, <em class="sig-param">class1</em>, <em class="sig-param">class2</em>, <em class="sig-param">class3</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._visualization.Visualization.plot_ripley_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots one feature at a time. 
+Checks if the computing has been done.
+Retrieves info from perimage_results_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Feature_column</dt>
+<dd class="field-odd"><p>str
+features’ name from feature_table.</p>
+</dd>
+<dt class="field-even">Method</dt>
+<dd class="field-even"><p>str
+can be 
+- ‘assortativity’ or ‘ripley’ (for categorical features), 
+- ‘moran’, ‘geary’, ‘getisord’ (global spatial autocorrelation for continuous features)</p>
+</dd>
+<dt class="field-odd">Neighborhood_matrix_type</dt>
+<dd class="field-odd"><p>str
+should be ‘k’, ‘radius’, or ‘network’
+Same ‘neighborhood_matrix_type’ for all the points in the correlogram.</p>
+</dd>
+<dt class="field-even">Neighborhood_min_p0</dt>
+<dd class="field-even"><p>int or float
+minimum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-odd">Neighborhood_min_p1</dt>
+<dd class="field-odd"><p>int or float
+maximum bound for the neighborhood.
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’</p>
+</dd>
+<dt class="field-even">Neighborhood_step</dt>
+<dd class="field-even"><p>int or float
+a step in terms of parameters ([p0, p0+step, p0+2step, …p1])
+should be int for ‘k’ or ‘network’. Can be int or float for ‘radius’ 
+one of neighborhood_step, nb_pairs_step or nb_test_points should be defined.</p>
+</dd>
+<dt class="field-odd">Nb_pairs_step</dt>
+<dd class="field-odd"><p>int
+a step in terms of number of pairs for each test.
+Overlooked if neighborhood_step is provided.</p>
+</dd>
+<dt class="field-even">Nb_test_points</dt>
+<dd class="field-even"><p>int
+a number of test points.
+Overlooked if neighborhood_step or nb_pairs_step are provided.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="submodule">
+<h2>Submodule<a class="headerlink" href="#submodule" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="pySpacell.pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell._neighborhood_matrix.</code><code class="descname">NeighborhoodMatrixComputation</code><a class="headerlink" href="#pySpacell.pySpacell._neighborhood_matrix.NeighborhoodMatrixComputation" title="Permalink to this definition">¶</a></dt>
+<dt id="pySpacell._ripley.RipleyObject">
+<em class="property">class </em><code class="sig-prename descclassname">pySpacell._ripley.</code><code class="sig-name descname">RipleyObject</code><span class="sig-paren">(</span><em class="sig-param">classes</em>, <em class="sig-param">count_classes</em>, <em class="sig-param">K</em>, <em class="sig-param">K_cross</em>, <em class="sig-param">K_cross_star</em>, <em class="sig-param">permutations</em>, <em class="sig-param">lambda_i</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pySpacell._ripley.RipleyObject.get_cross_function">
+<code class="sig-name descname">get_cross_function</code><span class="sig-paren">(</span><em class="sig-param">class1</em>, <em class="sig-param">class2</em>, <em class="sig-param">star=True</em>, <em class="sig-param">variance_stabilization=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject.get_cross_function" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
-<dt id="pySpacell.pySpacell._assortativity.Assortativity">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell._assortativity.</code><code class="descname">Assortativity</code><a class="headerlink" href="#pySpacell.pySpacell._assortativity.Assortativity" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="pySpacell._ripley.RipleyObject.get_diff_cross_function">
+<code class="sig-name descname">get_diff_cross_function</code><span class="sig-paren">(</span><em class="sig-param">class11</em>, <em class="sig-param">class12</em>, <em class="sig-param">class21</em>, <em class="sig-param">class22</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject.get_diff_cross_function" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
-<dt id="pySpacell.pySpacell._ripley.Ripley">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell._ripley.</code><code class="descname">Ripley</code><a class="headerlink" href="#pySpacell.pySpacell._ripley.Ripley" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="pySpacell._ripley.RipleyObject.get_diff_pval">
+<code class="sig-name descname">get_diff_pval</code><span class="sig-paren">(</span><em class="sig-param">class11</em>, <em class="sig-param">class12</em>, <em class="sig-param">class21</em>, <em class="sig-param">class22</em>, <em class="sig-param">star=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject.get_diff_pval" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
-<dt id="pySpacell.pySpacell._ripley.RipleyObject">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell._ripley.</code><code class="descname">RipleyObject</code><span class="sig-paren">(</span><em>classes</em>, <em>count_classes</em>, <em>K</em>, <em>K_cross</em>, <em>K_cross_star</em>, <em>permutations</em>, <em>lambda_i</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell.pySpacell._ripley.RipleyObject" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="pySpacell._ripley.RipleyObject.get_diff_quantiles">
+<code class="sig-name descname">get_diff_quantiles</code><span class="sig-paren">(</span><em class="sig-param">class11, class12, class21, class22, star=True, quantiles=[2.5, 97.5], variance_stabilization=True, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject.get_diff_quantiles" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
-<dt id="pySpacell.pySpacell._spatial_autocorrelation.SpatialAutocorrelation">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell._spatial_autocorrelation.</code><code class="descname">SpatialAutocorrelation</code><a class="headerlink" href="#pySpacell.pySpacell._spatial_autocorrelation.SpatialAutocorrelation" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="pySpacell._ripley.RipleyObject.get_pval">
+<code class="sig-name descname">get_pval</code><span class="sig-paren">(</span><em class="sig-param">class1</em>, <em class="sig-param">class2</em>, <em class="sig-param">star=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject.get_pval" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
-<dt id="pySpacell.pySpacell._visualization.Visualization">
-<em class="property">class </em><code class="descclassname">pySpacell.pySpacell._visualization.</code><code class="descname">Visualization</code><a class="headerlink" href="#pySpacell.pySpacell._visualization.Visualization" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="pySpacell._ripley.RipleyObject.get_quantiles">
+<code class="sig-name descname">get_quantiles</code><span class="sig-paren">(</span><em class="sig-param">class1, class2, star=True, quantiles=[2.5, 97.5], variance_stabilization=True, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pySpacell._ripley.RipleyObject.get_quantiles" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
 
 </div>
 </div>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pySpacell</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pySpacell package</a><ul>
+<li><a class="reference internal" href="#module-pySpacell.pySpacell">pySpacell module</a></li>
+<li><a class="reference internal" href="#submodule">Submodule</a></li>
 </ul>
-</div>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to pySpacell’s documentation!</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pySpacell.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2019, France ROSE.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/pySpacell.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pySpacell’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pySpacell 0.1.2 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, France ROSE.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
   </body>
 </html>

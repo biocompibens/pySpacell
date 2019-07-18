@@ -94,35 +94,36 @@ class SpatialAutocorrelation(object):
                       star=False,
                       quantiles=[2.5, 97.5],
                       **kwargs):
-        ''' Tests feature for LOCAL/SINGLE-CELL spatial autocorrelation with the specified method.
-            Computes one test per object.
-            Stores the test results in the dataframe feature_table.
-            Is computed for a given neighborhood matrix.
+        ''' 
+        Tests feature for LOCAL/SINGLE-CELL spatial autocorrelation with the specified method.
+        Computes one test per object.
+        Stores the test results in the dataframe feature_table.
+        Is computed for a given neighborhood matrix.
 
-                        :method: str
-                     test method. Should be moran or getisord
+        :method: str
+                 test method. Should be moran or getisord
 
-            :feature_column: str
-                              features' name from feature_table.
+        :feature_column: str
+                          features' name from feature_table.
 
-            :neighborhood_matrix_type: str
-                                        should be 'k', 'radius', or 'network'
+        :neighborhood_matrix_type: str
+                                    should be 'k', 'radius', or 'network'
 
-            :neighborhood_min_p0: int or float
-                                  minimum bound for the neighborhood.
-                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
-            :neighborhood_min_p1: int or float
-                                  maximum bound for the neighborhood.
-                                  should be int for 'k' or 'network'. Can be int or float for 'radius' 
-            :permutations: int
-                           number of random permutations to compute the quantiles and p-value
-            :quantiles: list of 2 float
-                        quantiles, 2 numbers between 0 and 100
+        :neighborhood_min_p0: int or float
+                              minimum bound for the neighborhood.
+                              should be int for 'k' or 'network'. Can be int or float for 'radius' 
+        :neighborhood_min_p1: int or float
+                              maximum bound for the neighborhood.
+                              should be int for 'k' or 'network'. Can be int or float for 'radius' 
+        :permutations: int
+                       number of random permutations to compute the quantiles and p-value
+        :quantiles: list of 2 float
+                    quantiles, 2 numbers between 0 and 100
 
-            :star: bool 
-                   Used only if method is 'getisord'
-                   if star=True, includes the central object in the statistics. Hot spot analysis
-                   if star=False, does not include the central object in the statistics. Outlier analysis.
+        :star: bool 
+               Used only if method is 'getisord'
+               if star=True, includes the central object in the statistics. Hot spot analysis
+               if star=False, does not include the central object in the statistics. Outlier analysis.
         ''' 
 
         method_fct, get_stats = self._local_autocorrelation_method(method, star)

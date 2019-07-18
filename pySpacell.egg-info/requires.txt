@@ -1,7 +1,7 @@
 matplotlib>=2.2.3
 numpy
 seaborn
-PySAL
+PySAL>=2.0
 pandas
 scipy
 Pillow

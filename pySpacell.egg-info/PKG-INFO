@@ -1,6 +1,6 @@
-Metadata-Version: 1.1
+Metadata-Version: 2.1
 Name: pySpacell
-Version: 0.1.0
+Version: 0.1.2
 Summary: A Python package for single cell spatial image analysis
 Home-page: https://github.com/biocompibens/pySpacell
 Author: France ROSE
@@ -9,9 +9,14 @@ License: MIT
 Description: # pySpacell
         A Python package for single-cell spatial image analysis.
         
+        
+        ## Usage examples
+        Example data are located in pySpacell/data along with exemple scripts in pySpacell/examples
+        
 Keywords: spatial analysis microscopy cells statistics
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3.5
 Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
