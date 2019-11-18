@@ -19,6 +19,66 @@ The available spatial tests are:
 ## Usage examples
 Example data are located in *data/* along with exemple scripts in *example/*
 
+### Basic example
+
+This example of code will compute a series of neighborhood matrices, calculate a series of spatial-autocorrelation Moran indices and plot it in a correlogram (line plot with x-axis corresponding to the increasing neighborhoods and y-axis the value of the Moran index).
+
+```
+import matplotlib.pyplot as plt
+from pySpacell import Spacell
+
+image_label_file = ## path to image label file
+feature_file = ## path to csv file containing the features
+
+column_x_y = ['X', 'Y']
+column_object = 'label'
+
+spa = Spacell(feature_file, 
+         image_label_file, 
+         column_x_y=column_x_y,
+         column_objectnumber=column_object)
+         
+feature = ## corresponding to the name of the column in the csv
+method = 'moran' ## or 'geary' or 'getisord' for global spatial-autocorrelation indices
+
+neighborhood_matrix_type = 'k' ## or 'radius', or 'network'
+neighborhood_p0 = 0 ## lower bound
+neighborhood_p1 = 30 ## upper bound
+neighborhood_step = 5 ## step to iterate between lower and upper bounds
+
+permutations = 999 ## number of permutations to construct the null model
+quantiles = [2.5, 97.5] ## quantiles for the null distribution and the statistical test
+
+seq_points_x = spa.correlogram(feature,
+                                method,
+                                neighborhood_matrix_type,
+                                neighborhood_p0,
+                                neighborhood_p1,
+                                neighborhood_step=neighborhood_step,
+                                permutations=permutations,
+                                quantiles=quantiles, 
+                                plot_bool=True)
+
+plt.show()
+
+```
+
+Main methods of the pySpacell class include:
+* *correlogram*: computes a serie of spatial analysis tests for the provided features. Gives one value for the image. The starting and ending neighborhood parameters, neighborhood_p0 and neighborhood_p1, are to be set. 3 modes are available to define the intermediary neighborhood parameters.
+
+* *get_neighborhood_matrix*: return the neighborhood matrix for specified parameters if already computed. 3 modes are available: 
+    1. 'k' for k-nearest neighbors;
+    2. 'radius' for neighbors at an euclidean distance;
+    3. 'network' for neighbors from the object graph (touching objects are neighbors).
+    
+For each mode, an interval is requested to know which neighbors to include.
+* *compute_per_image_analysis*: computes per image spatial analysis tests for the provided features for one neighborhood matrix.
+* *compute_per_object_analysis*: computes per object spatial analysis tests for the provided features for one neighborhood matrix.
+
+The two last methods can be used for both continuous and categorical variables, using the `method` argument to choose the type of analysis.
+
+There are additional methods for visualization: *get_feature_filled_image*, *plot_2im*, *plot_neighborhood*, *plot_correlogram*, *plot_ripley_cross*, *plot_ripley_diff*, *get_hot_spots_image*.
+
 ### `example/script_figure_FUCCI.py`
 
 * This script allows to reproduce results from the Figure 3 of the paper.
