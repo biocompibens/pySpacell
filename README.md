@@ -121,7 +121,28 @@ There are additional methods for visualization: *get_feature_filled_image*, *plo
     * exemplify the use of pair distance constraints for the null model randomizations (see paper for more details).
     * display a single Ripley's cross-functions difference to visualize the spatial layout of a chosen pair of categories. 
     
+**NB:** when running the script examples from a cloned or downloaded git repository, it is necessary to add the following commands at the beginning of the scripts in order to properly import the local pySpacell:
+
+```
+import sys
+sys.path.append("..")
+```
+  
+# Comparison with other packages
+
+* `pySAL`: pySpacell relies on [`PySAL`](https://pysal.readthedocs.io/en/latest/) python package for the auto-correlation computations: `pySAL` is dedicated to spatial analysis of mainly geographical data.
+
+* other packages in R, for example `spatstat` are available for general spatial analysis
+
+* single-cell analysis packages focusing on genomics data. They intend to identify genes whose expression is spatially variant. They have been tested a data lying on a grid.
+    * [`trendsceek`](https://github.com/edsgard/trendsceek) in `R`. Their approach is based on summary statistics on marked point processes. One goal is to find local hot spots of gene expression.
     
+    
+    * [`SpatialDE`](https://github.com/Teichlab/SpatialDE) in `python`. The approach is based on Gaussian process regression and tries to group spatial variant genes into similar spatial patterns . 
+    
+However, these tools are not easily applicable to the analysis of cell images, as they are designed to process gene read counts and identify a small subset of genes whose expression varies spatially. In this context we could not find a versatile toolbox that could detect, quantify and compare spatial patterns of single-cell features.
+
+
 
 # Citation
 
