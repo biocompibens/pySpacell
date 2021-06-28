@@ -146,4 +146,4 @@ However, these tools are not easily applicable to the analysis of cell images, a
 
 # Citation
 
-*PySpacell : a Python package for spatial analysis of cell images.* Rose F., Rappez L., Triana S. H., Alexandrov T., Genovesio A. [Under review]
+* Rose, F., Rappez, L., Triana, S.H., Alexandrov, T. and Genovesio, A. (2020), PySpacell: A Python Package for Spatial Analysis of Cell Images. Cytometry, 97: 288-295. https://doi.org/10.1002/cyto.a.23955
