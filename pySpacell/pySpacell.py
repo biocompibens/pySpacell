@@ -62,9 +62,14 @@ class Spacell(NeighborhoodMatrixComputation,
 
         '''
 
-        if not os.path.exists(feature_file):
-            raise OSError("feature_file {} not found".format(feature_file))
-        self.feature_table = pd.read_csv(feature_file)
+        if type(feature_file) == str:
+            if not os.path.exists(feature_file):
+                raise OSError("feature_file {} not found".format(feature_file))
+            self.feature_table = pd.read_csv(feature_file)
+        elif type(feature_file) == pd.DataFrame:
+            self.feature_table = feature_file
+        else:
+            raise ValueError("[Spacell] feature_file should be a path to a csv file or a pandas Dataframe")
 
         if not column_objectnumber in self.feature_table.columns:
             raise ValueError("{} not in feature_table".format(column_objectnumber))
@@ -111,7 +116,7 @@ class Spacell(NeighborhoodMatrixComputation,
                            'neighborhood_nb_iterations', \
                            'nb_permutations', 'low_quantile', 'high_quantile']
         my_index = pd.MultiIndex(levels=[[] for _ in range(len(names_for_index))],
-                                 labels=[[] for _ in range(len(names_for_index))],
+                                 codes=[[] for _ in range(len(names_for_index))],
                                  names=names_for_index)
         ### to store results per image, not per self
         self.perimage_results_table = pd.DataFrame(index=my_index)

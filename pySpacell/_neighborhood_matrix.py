@@ -2,7 +2,7 @@
 
 import numpy as np
 import pandas as pd
-import pysal
+import libpysal
 import cv2
 import scipy
 import scipy.spatial as spatial
@@ -17,6 +17,7 @@ class NeighborhoodMatrixComputation(object):
                               neighborhood_matrix_type,
                               neighborhood_p0,
                               neighborhood_p1,
+                                    save=True,
                               **kwargs):
         ''' 
         Computes the neighborhood matrix from the label image as a pysal object. 
@@ -80,13 +81,20 @@ class NeighborhoodMatrixComputation(object):
                                                              neighborhood_p1,
                                                              **kwargs)
 
-            neighborhood_matrix = pysal.lib.weights.weights.W(neighbor_dict)
+            labels = np.unique(self.feature_table[self._column_objectnumber].values)
+            for l in labels:
+                if l not in neighbor_dict.keys():
+                    neighbor_dict[l] = []
+
+            neighborhood_matrix = libpysal.weights.weights.W(neighbor_dict)
             nb_pairs = np.sum(neighborhood_matrix.full()[0])/2
 
-            self.neighborhood_matrix_df.loc[self.neighborhood_matrix_df.shape[0],:] = [neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
-                neighborhood_matrix, \
-                nb_pairs]
-
+            if save:
+                self.neighborhood_matrix_df.loc[self.neighborhood_matrix_df.shape[0],:] = [neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
+                    neighborhood_matrix, \
+                    nb_pairs]
+            else:
+                return neighborhood_matrix.full(), nb_pairs
 
 
     def _compute_matrix_k(self, 
@@ -145,9 +153,9 @@ class NeighborhoodMatrixComputation(object):
         NN[mask] = -1
         NN = [[l for l in line if l != -1] for line in NN]
         
-        NN = [[self.feature_table.iloc[l][self._column_objectnumber] for l in line if l != -1] for line in NN]
+        NN = [[self.feature_table.iloc[l][self._column_objectnumber].copy() for l in line if l != -1] for line in NN]
 
-        NN_distances = [[l for l in line if (l < neighborhood_p1) and (l > neighborhood_p0)] for line in self.NN_distances]
+        # NN_distances = [[l for l in line if (l < neighborhood_p1) and (l > neighborhood_p0)] for line in self.NN_distances]
         self.feature_table.loc[:, 'NumberNeighbors_{}'.format(suffix)] = np.sum(~mask, axis=1)
 
         if save_neighbors:
@@ -155,7 +163,7 @@ class NeighborhoodMatrixComputation(object):
             self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN, index=self.feature_table.index)
 
         ObjNum = self.feature_table[self._column_objectnumber].values
-        neighbor_dict = {obj_num: neighbors for (obj_num, neighbors) in zip(ObjNum, NN) if len(neighbors)>0}
+        neighbor_dict = {obj_num: neighbors for (obj_num, neighbors) in zip(ObjNum, NN) if len(neighbors) > 0}
         # print(neighbor_dict)
         return neighbor_dict
 
@@ -178,7 +186,7 @@ class NeighborhoodMatrixComputation(object):
 
         def matrix_treatment(M):
             np.fill_diagonal(M,0)
-            M[M>1] = 1
+            M[M > 1] = 1
             return M
 
         ## actual neighbors
@@ -200,7 +208,7 @@ class NeighborhoodMatrixComputation(object):
             new_power_matrices[:] = map(matrix_treatment, new_power_matrices)
             self.adjacency_matrix[iterations].extend(new_power_matrices)
 
-        obj_nums = self.feature_table[self._column_objectnumber].values
+        obj_nums = self.feature_table.loc[:, self._column_objectnumber].values
         ### real network
         if neighborhood_p1 == 1: 
             list_where = np.where(self.adjacency_matrix[iterations][0])
@@ -213,7 +221,7 @@ class NeighborhoodMatrixComputation(object):
             cumsum_mat2 = self.adjacency_matrix[iterations][neighborhood_p0:neighborhood_p1]
             cumsum_mat2 = np.sum(cumsum_mat2, axis=0)
             w = cumsum_mat2 - cumsum_mat
-            w[w<0] = 0
+            w[w < 0] = 0
 
             list_where = np.where(w)
 
@@ -230,7 +238,8 @@ class NeighborhoodMatrixComputation(object):
             self.feature_table.loc[:, 'NumberNeighbors_{}'.format(suffix)] = np.sum(w, axis=0)
 
             if save_neighbors:
-                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series([obj_nums[list_where[1][list_where[0] == index]] for index in range(self.n)], index=self.feature_table.index)
+                # self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series([obj_nums[list_where[1][list_where[0] == index]] for index in range(self.n)], index=self.feature_table.index)
+                self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = [obj_nums[list_where[1][list_where[0] == index]] for index in range(self.n)]
 
         return neighbor_dict
 
@@ -238,7 +247,7 @@ class NeighborhoodMatrixComputation(object):
 
 
     def _compute_NN(self, kd_tree_approx=False):
-        coordinates = self.feature_table.loc[:,self._column_x_y].values
+        coordinates = self.feature_table.loc[:, self._column_x_y].values
 
         if kd_tree_approx:
             tree = spatial.KDTree(coordinates)
@@ -269,7 +278,7 @@ class NeighborhoodMatrixComputation(object):
         '''
         
         labels = np.unique(self.feature_table[self._column_objectnumber].values)
-        custom_image_label = self.image_label.copy()
+        custom_image_label = self.image_label.copy().astype(np.int64)
         custom_image_label[~np.isin(custom_image_label, labels)] = 0
 
         if self._debug:
@@ -291,6 +300,6 @@ class NeighborhoodMatrixComputation(object):
         self.feature_table.loc[self.feature_table[self._column_objectnumber].isin(labels), 'NumberNeighbors_{}'.format(suffix)] = sum_neighbors
 
         if save_neighbors:
-            index_for_series = self.feature_table.index[self.feature_table[self._column_objectnumber].isin(labels)]
-            self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = self.feature_table[self._column_objectnumber].apply(lambda v: label_rag.neighbors(v))
+            # index_for_series = self.feature_table.index[self.feature_table[self._column_objectnumber].isin(labels)]
+            self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = self.feature_table[self._column_objectnumber].copy().apply(lambda v: label_rag.neighbors(v))
 
