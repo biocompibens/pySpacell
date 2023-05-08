@@ -67,7 +67,7 @@ class Spacell(NeighborhoodMatrixComputation,
                 raise OSError("feature_file {} not found".format(feature_file))
             self.feature_table = pd.read_csv(feature_file)
         elif type(feature_file) == pd.DataFrame:
-            self.feature_table = feature_file
+            self.feature_table = feature_file.copy()
         else:
             raise ValueError("[Spacell] feature_file should be a path to a csv file or a pandas Dataframe")
 

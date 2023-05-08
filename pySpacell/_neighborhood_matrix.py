@@ -90,9 +90,12 @@ class NeighborhoodMatrixComputation(object):
             nb_pairs = np.sum(neighborhood_matrix.full()[0])/2
 
             if save:
-                self.neighborhood_matrix_df.loc[self.neighborhood_matrix_df.shape[0],:] = [neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
-                    neighborhood_matrix, \
-                    nb_pairs]
+                self.neighborhood_matrix_df.loc[self.neighborhood_matrix_df.shape[0], :] = [neighborhood_matrix_type,
+                                                                                            neighborhood_p0,
+                                                                                            neighborhood_p1,
+                                                                                            iterations,
+                                                                                            neighborhood_matrix,
+                                                                                            nb_pairs]
             else:
                 return neighborhood_matrix.full(), nb_pairs
 
@@ -107,11 +110,11 @@ class NeighborhoodMatrixComputation(object):
         if self.NN is None:
             self._compute_NN(kd_tree_approx)
 
-        NN = self.NN[:,neighborhood_p0:neighborhood_p1+1]
+        NN = self.NN[:, neighborhood_p0:neighborhood_p1+1]
         
         NN = [[self.feature_table.iloc[l][self._column_objectnumber] for l in line] for line in NN]
 
-        self.feature_table.loc[:, 'DistanceLastNeighbor_{}'.format(suffix)] = self.NN_distances[:,neighborhood_p1]
+        self.feature_table.loc[:, 'DistanceLastNeighbor_{}'.format(suffix)] = self.NN_distances[:, neighborhood_p1]
 
         # if save_neighbors:
         #     self.feature_table['neighbors_{}'.format(suffix)] = np.empty((self.n, 0)).tolist()
@@ -130,7 +133,7 @@ class NeighborhoodMatrixComputation(object):
                 self.feature_table.loc[:, 'neighbors_{}'.format(suffix)] = pd.Series(NN, index=self.feature_table.index)
         
             ObjNum = self.feature_table[self._column_objectnumber].values
-            neighbor_dict = {obj_num: neighbors for (obj_num, neighbors) in zip(ObjNum, NN) if len(neighbors)>0}
+            neighbor_dict = {obj_num: neighbors for (obj_num, neighbors) in zip(ObjNum, NN) if len(neighbors) > 0}
         
         return neighbor_dict
 
@@ -146,14 +149,15 @@ class NeighborhoodMatrixComputation(object):
         if self.NN is None:
             self._compute_NN(kd_tree_approx)
 
+        # self.NN_distances is a numpy array
         mask = (self.NN_distances > neighborhood_p1) + (self.NN_distances < neighborhood_p0)
-        mask[:,0] = True
+        mask[:, 0] = True
         
         NN = np.array(self.NN)
         NN[mask] = -1
         NN = [[l for l in line if l != -1] for line in NN]
         
-        NN = [[self.feature_table.iloc[l][self._column_objectnumber].copy() for l in line if l != -1] for line in NN]
+        NN = [[self.feature_table.iloc[l].copy()[self._column_objectnumber] for l in line if l != -1] for line in NN]
 
         # NN_distances = [[l for l in line if (l < neighborhood_p1) and (l > neighborhood_p0)] for line in self.NN_distances]
         self.feature_table.loc[:, 'NumberNeighbors_{}'.format(suffix)] = np.sum(~mask, axis=1)
@@ -185,7 +189,7 @@ class NeighborhoodMatrixComputation(object):
                 return [np.dot(firstM,lastM)]
 
         def matrix_treatment(M):
-            np.fill_diagonal(M,0)
+            np.fill_diagonal(M, 0)
             M[M > 1] = 1
             return M
 
@@ -277,7 +281,7 @@ class NeighborhoodMatrixComputation(object):
 
         '''
         
-        labels = np.unique(self.feature_table[self._column_objectnumber].values)
+        labels = np.unique(self.feature_table.loc[:, self._column_objectnumber].values)
         custom_image_label = self.image_label.copy().astype(np.int64)
         custom_image_label[~np.isin(custom_image_label, labels)] = 0
 
@@ -297,7 +301,7 @@ class NeighborhoodMatrixComputation(object):
             print("_get_neighbors_from_label_image", suffix)
             print("_get_neighbors_from_label_image", len(sum_neighbors), len(labels), self.n)      
 
-        self.feature_table.loc[self.feature_table[self._column_objectnumber].isin(labels), 'NumberNeighbors_{}'.format(suffix)] = sum_neighbors
+        self.feature_table.loc[self.feature_table[self._column_objectnumber].copy().isin(labels), 'NumberNeighbors_{}'.format(suffix)] = sum_neighbors
 
         if save_neighbors:
             # index_for_series = self.feature_table.index[self.feature_table[self._column_objectnumber].isin(labels)]
