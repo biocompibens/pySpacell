@@ -41,7 +41,7 @@ class Ripley(object):
             w = self.get_neighborhood_matrix('radius', 0, radius)
 
         suffix = self.get_suffix('radius', 0, radius)
-        cond = self.feature_table['NumberNeighbors_{}'.format(suffix)]>0
+        cond = self.feature_table['NumberNeighbors_{}'.format(suffix)] > 0
         class_object, classes = pd.factorize(self.feature_table.loc[cond, feature_column], sort=True)
         count_classes = pd.value_counts(self.feature_table.loc[cond, feature_column])[classes].values
 
@@ -49,20 +49,19 @@ class Ripley(object):
             print("in _compute_ripley", classes, count_classes)
 
         lambda_i = count_classes/area
-        sum_lambda = lambda_i + lambda_i[:,np.newaxis]
+        sum_lambda = lambda_i + lambda_i[:, np.newaxis]
 
-        if (count_classes<=1).all():
+        if (count_classes <= 1).all():
             raise TypeError("{} is not categorical".format(feature_column))
 
         edge_corr = self._get_edge_correction_area(radius)
-        product = w[0]*edge_corr
+        product = w[0][cond][:, cond] * edge_corr
 
         ### monte carlo simulations: "fix the combined set of locations and the number of each type of event, then randomly assigns labels to locations." Dixon 2002
         shuffled_labels = self._compute_randomizations(cond,
                                   feature_column,
                                   permutations,
                                   **kwargs)
-        print(shuffled_labels[0].shape, product.shape)
 
         ripley_cross = np.zeros((len(classes), len(classes)))
         ripley_cross_permutations = np.zeros((len(classes), len(classes), permutations))
@@ -70,35 +69,34 @@ class Ripley(object):
         for i, count_i in enumerate(count_classes):
             for j, count_j in enumerate(count_classes):
 
-                big_sum = np.nansum(product[class_object == i,:]
-                                           [:,class_object == j])
+                big_sum = np.nansum(product[class_object == i, :]
+                                           [:, class_object == j])
                 factor = area/count_i/count_j
-                ripley_cross[i,j] = factor*big_sum
+                ripley_cross[i, j] = factor * big_sum
 
-                ripley_cross_perm = np.array([factor*
-                                np.nansum(product[class_shuffled == classes[i],:]
-                                                 [:,class_shuffled == classes[j]]) 
+                ripley_cross_perm = np.array([factor *
+                                              np.nansum(product[class_shuffled == classes[i], :]
+                                                 [:, class_shuffled == classes[j]])
                                 for class_shuffled in shuffled_labels])
-                ripley_cross_permutations[i,j,:] = ripley_cross_perm
-
+                ripley_cross_permutations[i, j, :] = ripley_cross_perm
 
         if self._debug:
             print("in _compute_ripley", ripley_cross, classes, lambda_i)
             
         ripley_cross_star = (ripley_cross*lambda_i + (ripley_cross*lambda_i).T)/sum_lambda
-        K = area*np.nansum(product)/self.n/self.n
+        K = area * np.nansum(product) / self.n / self.n
 
         ripley_results = RipleyObject(classes, count_classes, K, ripley_cross, ripley_cross_star, ripley_cross_permutations, lambda_i)
 
-        multiIndex_f = (feature_column, \
-                        'radius', 0, radius, 'None',\
-                        permutations, quantiles[0], quantiles[1])
+        subset_columns = ['feature', \
+                           'neighborhood_matrix_type', 'neighborhood_p0', 'neighborhood_p1',
+                           'nb_permutations', 'low_quantile', 'high_quantile', 'type_result', 'result']
+        values = (feature_column, \
+                        'radius', 0, radius, \
+                        permutations, quantiles[0], quantiles[1], 'ripley', ripley_results)
 
-        self.perimage_results_table.loc[multiIndex_f, "ripley_results"] = ripley_results
-        self.perimage_results_table.sortlevel(inplace=True)
+        self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
 
-        
-        
 
     def _get_edge_correction_area(self, radius):
         '''Corrects the estimation for the cases where the disc is not completely inside the image.
@@ -113,10 +111,9 @@ class Ripley(object):
             print("_get_edge_correction_area", 'NumberNeighbors_{}'.format(self.get_suffix('radius', 0, radius)), np.unique(cond, return_counts=True))
 
         coordinates = self.feature_table.loc[cond, self._column_x_y].values
-        size = coordinates.shape[0]
 
-        d_x = np.min([coordinates[:,0], width - coordinates[:,0]], axis=0)
-        d_y = np.min([coordinates[:,1], length - coordinates[:,1]], axis=0)
+        d_x = np.min([coordinates[:, 0], width - coordinates[:, 0]], axis=0)
+        d_y = np.min([coordinates[:, 1], length - coordinates[:, 1]], axis=0)
         d = np.minimum(d_x, d_y)
 
 
@@ -124,9 +121,9 @@ class Ripley(object):
         cond2 = radius < d_y ## no intersection for y axis
         cond3 = radius**2 < d_x**2 + d_y**2 ## intersection for x axis, y axis or both
 
-        alpha = np.arccos(d/radius)
+        alpha = np.arccos(d / radius)
         e = np.sqrt(radius**2 - d**2)
-        case2 = (np.pi * radius**2)/(e*d + (np.pi-alpha)*radius**2) 
+        case2 = (np.pi * radius**2)/(e * d + (np.pi - alpha) * radius**2)
         del d, alpha, e
 
         ## CASE1 = no intersection, value is 1
@@ -144,14 +141,14 @@ class Ripley(object):
         e_y = np.sqrt(radius**2 - d_y**2)
 
         ## CASE3: 2 intersections with r^2 > d_x^2 + d_y^2
-        case3 = (np.pi * radius**2)/(d_x*d_y + 0.5*(e_x*d_x+e_y*d_y) + (0.75*np.pi-0.5*alpha_x-0.5*alpha_y)*radius**2)
-        edge_corr[(~cond1)&(~cond2)&(cond3)] = case3[(~cond1)&(~cond2)&(cond3)]
+        case3 = (np.pi * radius**2) / (d_x * d_y + 0.5 * (e_x * d_x + e_y * d_y) + (0.75 * np.pi - 0.5 * alpha_x - 0.5 * alpha_y) * radius**2)
+        edge_corr[(~cond1) & (~cond2) & (cond3)] = case3[(~cond1) & (~cond2) & (cond3)]
         del case3
 
         case4 = (np.pi * radius**2)/(e_x*d_x + e_y*d_y + (np.pi - alpha_x - alpha_y)*radius**2)
         del alpha_x, alpha_y, e_x, e_y, d_x, d_y, radius
 
-        edge_corr[(~cond1)&(~cond2)&(~cond3)] = case4[(~cond1)&(~cond2)&(~cond3)]
+        edge_corr[(~cond1) & (~cond2) & (~cond3)] = case4[(~cond1) & (~cond2) & (~cond3)]
         del cond1, cond2, cond3, case4
 
         return edge_corr

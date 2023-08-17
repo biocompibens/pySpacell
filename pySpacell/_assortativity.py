@@ -12,8 +12,8 @@ class Assortativity(object):
                               neighborhood_p0,
                               neighborhood_p1,
                               *args,
-                              iterations = 'None',
-                              permutations = 0, 
+                              iterations='None',
+                              permutations=0,
                               quantiles = [2.5, 97.5],
                               **kwargs):
         ''' 
@@ -89,31 +89,60 @@ class Assortativity(object):
 
         else:
 
-            p_sim, low_q, high_q = 'None', 'None', 'None'
+            p_sim, p_i_sim, low_q, high_q = 'None', 'None', 'None', 'None'
 
-        multiIndex_f = (feature_column, \
+        subset_columns = ['feature', \
+                           'neighborhood_matrix_type', 'neighborhood_p0', 'neighborhood_p1',
+                           'neighborhood_nb_iterations', \
+                           'nb_permutations', 'low_quantile', 'high_quantile', 'type_result', 'result']
+
+        values = (feature_column, \
                         neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
-                        permutations, quantiles[0], quantiles[1])
-        print(multiIndex_f)
+                        permutations, quantiles[0], quantiles[1], "assortativity_stats", true_assortativity.r)
+        self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
 
-        self.perimage_results_table.loc[multiIndex_f, "assortativity_stats"] = true_assortativity.r
-        self.perimage_results_table.loc[multiIndex_f, "assortativity_error"] = true_assortativity.err
-        self.perimage_results_table.loc[multiIndex_f, "assortativity_p_val"] = p_sim
-        self.perimage_results_table.loc[multiIndex_f, "assortativity_low_quantile"] = low_q
-        self.perimage_results_table.loc[multiIndex_f, "assortativity_high_quantile"] = high_q
+        values = (feature_column, \
+                        neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
+                        permutations, quantiles[0], quantiles[1], "assortativity_error", true_assortativity.err)
+        self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
+
+        values = (feature_column, \
+                        neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
+                        permutations, quantiles[0], quantiles[1], "assortativity_p_val", p_sim)
+        self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
+
+        values = (feature_column, \
+                        neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
+                        permutations, quantiles[0], quantiles[1], "assortativity_low_quantile", low_q)
+        self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
+
+        values = (feature_column, \
+                        neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
+                        permutations, quantiles[0], quantiles[1], "assortativity_high_quantile", high_q)
+        self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
 
 
         for index_category, category in enumerate(values_X):
-            multiIndex_f = ("{}_{}".format(feature_column, category), \
-                        neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations,\
-                        permutations, quantiles[0], quantiles[1])
 
-            self.perimage_results_table.loc[multiIndex_f, "assortativity_stats"] = true_assortativity.r_i[index_category]
-            self.perimage_results_table.loc[multiIndex_f, "assortativity_p_val"] = p_i_sim[index_category]
-            self.perimage_results_table.loc[multiIndex_f, "assortativity_low_quantile"] = low_q_i[index_category]
-            self.perimage_results_table.loc[multiIndex_f, "assortativity_high_quantile"] = high_q_i[index_category]
+            values = ("{}_{}".format(feature_column, category), \
+                      neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
+                      permutations, quantiles[0], quantiles[1], "assortativity_high_quantile", high_q_i[index_category])
+            self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
 
-        self.perimage_results_table.sortlevel(inplace=True)
+            values = ("{}_{}".format(feature_column, category), \
+                      neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
+                      permutations, quantiles[0], quantiles[1], "assortativity_low_quantile", low_q_i[index_category])
+            self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
+
+            values = ("{}_{}".format(feature_column, category), \
+                      neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
+                      permutations, quantiles[0], quantiles[1], "assortativity_stats", true_assortativity.r_i[index_category])
+            self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
+
+            values = ("{}_{}".format(feature_column, category), \
+                      neighborhood_matrix_type, neighborhood_p0, neighborhood_p1, iterations, \
+                      permutations, quantiles[0], quantiles[1], "assortativity_p_val", p_i_sim[index_category])
+            self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
 
 
     def _compute_matrix_for_assortativity(self, X, W_mat):

@@ -17,6 +17,7 @@ try:
     from ._visualization import Visualization
     from ._ripley import Ripley
     from ._randomizations import Randomizations
+    from ._pairs_test import Pairs
 except SystemError:
     from _neighborhood_matrix import NeighborhoodMatrixComputation
     from _spatial_autocorrelation import SpatialAutocorrelation
@@ -24,6 +25,7 @@ except SystemError:
     from _visualization import Visualization
     from _ripley import Ripley
     from _randomizations import Randomizations
+    from _pairs_test import Pairs
 
 
 class Spacell(NeighborhoodMatrixComputation,
@@ -32,6 +34,7 @@ class Spacell(NeighborhoodMatrixComputation,
               Visualization,
               Ripley,
               Randomizations,
+              Pairs,
               object):
     matrix_types = ['k', 'radius', 'network']
     precision_float_radius = 3
@@ -111,15 +114,10 @@ class Spacell(NeighborhoodMatrixComputation,
                                                             'neighborhood_matrix', \
                                                             'nb_pairs'])
 
-        names_for_index = ['feature', \
+        self.perimage_results_table = pd.DataFrame(columns=['feature', \
                            'neighborhood_matrix_type', 'neighborhood_p0', 'neighborhood_p1',
                            'neighborhood_nb_iterations', \
-                           'nb_permutations', 'low_quantile', 'high_quantile']
-        my_index = pd.MultiIndex(levels=[[] for _ in range(len(names_for_index))],
-                                 codes=[[] for _ in range(len(names_for_index))],
-                                 names=names_for_index)
-        ### to store results per image, not per self
-        self.perimage_results_table = pd.DataFrame(index=my_index)
+                           'nb_permutations', 'low_quantile', 'high_quantile', 'type_result', 'result'])
 
     def get_neighborhood_matrix(self,
                                 neighborhood_matrix_type,
@@ -440,7 +438,7 @@ class Spacell(NeighborhoodMatrixComputation,
                               
             :method: str
                      can be 
-                     - 'assortativity' or 'ripley' (for categorical features), 
+                     - 'assortativity', 'ripley', 'pairs' (for categorical features),
                      - 'moran', 'geary', 'getisord' (global spatial autocorrelation for continuous features)
 
             :neighborhood_matrix_type: str
@@ -471,6 +469,7 @@ class Spacell(NeighborhoodMatrixComputation,
                                                     neighborhood_matrix_type,
                                                     neighborhood_p0,
                                                     neighborhood_p1,
+                                                    iterations=iterations,
                                                     **kwargs)
                     else:
                         print("WARNING feature {} not in feature_table".format(f))
@@ -480,6 +479,7 @@ class Spacell(NeighborhoodMatrixComputation,
                                                 neighborhood_matrix_type,
                                                 neighborhood_p0,
                                                 neighborhood_p1,
+                                                iterations=iterations,
                                                 **kwargs)
                 else:
                     print("WARNING feature {} not in feature_table".format(feature_columns))
@@ -498,6 +498,23 @@ class Spacell(NeighborhoodMatrixComputation,
                 if feature_columns in self.feature_table.columns:
                     self._compute_ripley(feature_columns,
                                          neighborhood_p1,
+                                         **kwargs)
+                else:
+                    print("WARNING feature {} not in feature_table".format(feature_columns))
+
+        elif method.lower() == 'pairs':
+            print("neighborhood_p0 is set to 0")
+            print("neighborhood_p1 is set to 1")
+            if isinstance(feature_columns, list):
+                for f in feature_columns:
+                    if f in self.feature_table.columns:
+                        return self._compute_pairs_test(f,
+                                             **kwargs)
+                    else:
+                        print("WARNING feature {} not in feature_table".format(f))
+            elif isinstance(feature_columns, str):
+                if feature_columns in self.feature_table.columns:
+                    return self._compute_pairs_test(feature_columns,
                                          **kwargs)
                 else:
                     print("WARNING feature {} not in feature_table".format(feature_columns))

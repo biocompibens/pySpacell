@@ -15,17 +15,18 @@ class Randomizations(object):
 
         if n_controlled_distances == 0:
 
-            return [np.asarray(np.random.permutation(self.feature_table.loc[cond,column_cell_categories]), dtype=int) for _ in range(permutations)]
+            return [np.asarray(np.random.permutation(self.feature_table.loc[cond, column_cell_categories]))#, dtype=int)
+                    for _ in range(permutations)]
 
         else:
-            nearest_distances = self.NN_distances[cond,1:n_controlled_distances+1]
+            nearest_distances = self.NN_distances[cond, 1: n_controlled_distances + 1]
 
             types = np.unique(self.feature_table.loc[cond, column_cell_categories])
-            n_types = self.feature_table.loc[cond,:].groupby(column_cell_categories).agg('count').values[:,0]
+            n_types = self.feature_table.loc[cond, :].groupby(column_cell_categories).agg('count').values[:, 0]
 
             gkde_types = [
-                    gaussian_kde((nearest_distances[self.feature_table.loc[cond,column_cell_categories].values==i]).T)
-                    for i in types
+                gaussian_kde((nearest_distances[self.feature_table.loc[cond, column_cell_categories].values == i]).T)
+                for i in types
                            ]
 
             randomizations = np.zeros((permutations, np.sum(cond)), dtype=int)
