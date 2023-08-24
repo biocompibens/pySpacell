@@ -60,31 +60,32 @@ class Pairs(object):
                                   permutations,
                                   **kwargs)
 
-        pairs_cross = np.zeros((len(classes), len(classes)))
-        pairs_cross_permutations = np.zeros((len(classes), len(classes), permutations))
-
-        for i, count_i in enumerate(count_classes):
-            for j, count_j in enumerate(count_classes):
-                big_sum = np.nansum(product[class_object == i, :]
-                                    [:, class_object == j])
-                pairs_cross[i, j] = big_sum
-
-                pairs_cross_perm = np.array([np.nansum(product[class_shuffled == classes[i], :]
-                                                        [:, class_shuffled == classes[j]])
-                                              for class_shuffled in shuffled_labels])
-                pairs_cross_permutations[i, j, :] = pairs_cross_perm
-
-        proba_interaction = ((np.sum(pairs_cross[..., np.newaxis] >= pairs_cross_permutations, axis=-1) + 1)
-                             / (permutations + 1))
-
-        for index_category1, category1 in enumerate(classes):
-            for index_category2, category2 in enumerate(classes):
-                subset_columns = ['feature', \
-                           'neighborhood_matrix_type', 'neighborhood_p0', 'neighborhood_p1',
-                           'nb_permutations', 'type_result', 'result']
-                values = ("{}_{}_{}".format(feature_column, category1, category2), \
-                            'network', 0, 1, permutations, 'pair_proba_interaction', proba_interaction[index_category1, index_category2])
-
-                self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
-
-        return classes, proba_interaction
+        return w, shuffled_labels
+        # pairs_cross = np.zeros((len(classes), len(classes)))
+        # pairs_cross_permutations = np.zeros((len(classes), len(classes), permutations))
+        #
+        # for i, count_i in enumerate(count_classes):
+        #     for j, count_j in enumerate(count_classes):
+        #         big_sum = np.nansum(product[class_object == i, :]
+        #                             [:, class_object == j])
+        #         pairs_cross[i, j] = big_sum
+        #
+        #         pairs_cross_perm = np.array([np.nansum(product[class_shuffled == classes[i], :]
+        #                                                 [:, class_shuffled == classes[j]])
+        #                                       for class_shuffled in shuffled_labels])
+        #         pairs_cross_permutations[i, j, :] = pairs_cross_perm
+        #
+        # proba_interaction = ((np.sum(pairs_cross[..., np.newaxis] >= pairs_cross_permutations, axis=-1) + 1)
+        #                      / (permutations + 1))
+        #
+        # for index_category1, category1 in enumerate(classes):
+        #     for index_category2, category2 in enumerate(classes):
+        #         subset_columns = ['feature', \
+        #                    'neighborhood_matrix_type', 'neighborhood_p0', 'neighborhood_p1',
+        #                    'nb_permutations', 'type_result', 'result']
+        #         values = ("{}_{}_{}".format(feature_column, category1, category2), \
+        #                     'network', 0, 1, permutations, 'pair_proba_interaction', proba_interaction[index_category1, index_category2])
+        #
+        #         self.perimage_results_table.loc[self.perimage_results_table.shape[0], subset_columns] = values
+        #
+        # return classes, proba_interaction
